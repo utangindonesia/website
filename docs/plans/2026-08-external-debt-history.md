@@ -164,23 +164,36 @@ markup," addendum just confirms the exact source. `.card`/`.card-grid`'s existin
 CSS already matches the addendum's cell chrome one-for-one; T3's plan to reuse those classes for a
 single-cell section stands unchanged.
 
+## Data coverage note (T1)
+
+The August 2026 edition's Table I.1 (`TABEL_INDONESIA Ags26_value.xlsx`, sheet `TabI.1`) carries full
+monthly detail only from **January 2015** onward; 2007–2014 are each a single year-end column, not
+monthly. No table in this edition contains 2014 Q1/Q2/Q3. Per D7 ("never estimate a data value"),
+these three points are **not** invented — the series starts at **2014-12-31** (the real, sourced
+year-end 2014 figure) instead of 2014-03-31, giving 47 points instead of 50. This does not require a
+stop (D7's stop condition is "cannot read the xlsx," which was not the case here — the file read
+cleanly; only its historical depth is short by three quarters in the very first year) and does not
+break any hardcoded copy (§3b's "2014–{latest year}" string is still accurate; 2014 is still the
+series' first year). Flagged here for the owner/planning model to override if a full 2014-Q1 start
+is wanted badly enough to source it from an older archived edition instead.
+
 ## 4. Tasks
 
 Each task is a separate commit. Run `npm test && npm run build` before every commit; both must
 pass. Commit message prefix per task is given. Check boxes as you go.
 
 ### T1 — Data file + validation (`feat(uln): add external debt series`)
-- [ ] Create `data/external-debt.json` per §3, transcribed from SULNI Table 1 (D7). Record which
+- [x] Create `data/external-debt.json` per §3, transcribed from SULNI Table 1 (D7). Record which
       table/sheet you used in `_note`.
-- [ ] Create `scripts/lib/external-debt.js` exporting pure functions (no I/O, no `Date.now()`):
+- [x] Create `scripts/lib/external-debt.js` exporting pure functions (no I/O, no `Date.now()`):
       - `validateExternalSeries(series) -> {ok, errors[]}` implementing every rule in §3.
       - `latestPoint(series)`, `pointAtOrBefore(series, isoDate)`.
       - `changes(series) -> { qoq: {abs, pct}, yoy: {abs, pct}, fiveYear: {abs, pct} }` for `government`
         (abs in USD mn, pct to 1 dp; `yoy`/`fiveYear` compare against the point exactly 4 / 20 quarters
         earlier, `null` if absent).
-- [ ] Create `scripts/lib/external-debt.test.js` (node:test): valid series passes; each rule fails
+- [x] Create `scripts/lib/external-debt.test.js` (node:test): valid series passes; each rule fails
       with a readable message; `changes()` on a hand-built 22-point series gives known answers.
-- [ ] Wire into `scripts/build-state.js`: read the file, `fail()` on validation errors (same pattern as
+- [x] Wire into `scripts/build-state.js`: read the file, `fail()` on validation errors (same pattern as
       `validateDebtSeries`). Nothing rendered yet.
 - Acceptance: `npm test` green, `npm run build` prints `[build-state] OK`, a deliberately broken date
   makes the build exit 1.

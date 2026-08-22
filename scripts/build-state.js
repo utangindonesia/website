@@ -18,6 +18,7 @@ import {
   STALE_DAYS_THRESHOLD,
 } from './lib/debt-math.js';
 import { fmtId, fmtId1dp, groupsToHtml, formatTriliunIdr, formatUsdBillions, humanDate } from './lib/format.js';
+import { validateExternalSeries } from './lib/external-debt.js';
 import { SITE_ORIGIN, GITHUB_REPO_URL, CF_BEACON_TOKEN } from './site-config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -37,6 +38,10 @@ const data = readJson('data/debt.json');
 
 const seriesCheck = validateDebtSeries(data.debt_series);
 if (!seriesCheck.ok) fail(seriesCheck.errors);
+
+const externalDebt = readJson('data/external-debt.json');
+const externalDebtCheck = validateExternalSeries(externalDebt.series);
+if (!externalDebtCheck.ok) fail(externalDebtCheck.errors);
 
 const { baseline, baselineTs, ratePerSec, officialDate } = computeRate(data.debt_series);
 const rateErrors = checkRateSanity(ratePerSec);
