@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{META_DESCRIPTION}}">
+<link rel="canonical" href="{{CANONICAL_URL}}">
+<link rel="alternate" hreflang="id" href="{{URL_ID}}">
+<link rel="alternate" hreflang="en" href="{{URL_EN}}">
+<link rel="alternate" hreflang="x-default" href="{{URL_ID}}">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="utangindonesia.org">
+<meta property="og:locale" content="id_ID">
+<meta property="og:title" content="{{TITLE}}">
+<meta property="og:description" content="{{META_DESCRIPTION}}">
+<meta property="og:url" content="{{OG_URL}}">
+<meta property="og:image" content="{{OG_IMAGE_URL}}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{TITLE}}">
+<meta name="twitter:description" content="{{META_DESCRIPTION}}">
+<meta name="twitter:image" content="{{OG_IMAGE_URL}}">
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="alternate icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="alternate icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">{{JSONLD}}</script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-header">
+    <a href="#hero" class="wordmark"><span class="w-accent">utang</span>indonesia<span class="w-dim">.org</span></a>
+    <nav class="site-nav">
+      <a href="#metodologi">Metodologi</a>
+      <a href="#sumber">Sumber</a>
+      <a href="/en/">EN</a>
+    </nav>
+  </header>
+
+  <section id="hero" class="hero">
+    <div class="eyebrow">Utang Pemerintah Pusat Republik Indonesia</div>
+    <h1 class="counter" style="margin:0;">
+      <span class="counter-rp">Rp</span>
+      <span class="counter-number" id="counter-number">{{COUNTER_GROUPS_HTML}}</span>
+    </h1>
+    <div class="official-line">Angka resmi terakhir: {{OFFICIAL_FIGURE_TEXT}} ({{OFFICIAL_DATE_HUMAN}}, Kemenkeu)</div>
+
+    <div class="interest-ticker">
+      <span class="interest-label">Bunga utang</span>
+      <span class="interest-value" id="interest-value">Rp {{INTEREST_VALUE}}</span>
+      <span class="interest-unit">/detik</span>
+    </div>
+
+    <div id="stale-badge" class="stale-badge" data-official-date="{{OFFICIAL_DATE_ISO}}"{{STALE_HIDDEN_ATTR}}>
+      <span class="stale-dot"></span>
+      <span class="stale-text" id="stale-text">Data terakhir berumur {{STALE_DAYS}} hari</span>
+      <a href="#metodologi" class="stale-link">Kenapa? →</a>
+    </div>
+
+    <noscript>
+      <div class="nojs-note">JavaScript nonaktif — angka ditahan pada rilis resmi terakhir, tanpa estimasi per detik.</div>
+    </noscript>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <h2>Utang</h2>
+      <span class="section-count">6 indikator</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-label">Utang per penduduk</div>
+        <div class="card-value">{{CARD_PER_PENDUDUK_VALUE}}</div>
+        <div class="card-note">{{CARD_PER_PENDUDUK_NOTE}}</div>
+        <a href="{{CARD_PER_PENDUDUK_SOURCE}}" class="card-source">Sumber →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Utang per pekerja</div>
+        <div class="card-value">{{CARD_PER_PEKERJA_VALUE}}</div>
+        <div class="card-note">{{CARD_PER_PEKERJA_NOTE}}</div>
+        <a href="{{CARD_PER_PEKERJA_SOURCE}}" class="card-source">Sumber →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Komposisi utang</div>
+        <div class="card-value">{{CARD_KOMPOSISI_VALUE}}</div>
+        <div class="bar-block">
+          <div class="bar-track"><span class="bar-fill" style="width: {{SBN_PCT}}%;"></span></div>
+          <div class="bar-caption"><span>SBN {{SBN_PCT_ID}}%</span><span>Pinjaman {{PINJAMAN_PCT_ID}}%</span></div>
+        </div>
+        <div class="card-note">{{CARD_KOMPOSISI_NOTE}}</div>
+        <a href="{{CARD_KOMPOSISI_SOURCE}}" class="card-source">Sumber →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Pembayaran bunga tahun berjalan</div>
+        <div class="card-value">{{CARD_BUNGA_VALUE}}</div>
+        <div class="bar-block">
+          <div class="bar-track"><span class="bar-fill" style="width: {{BUNGA_PCT}}%;"></span></div>
+          <div class="bar-caption" style="justify-content:flex-start;"><span>{{BUNGA_PCT_ID}}% dari pagu setahun ({{CARD_BUNGA_PAGU_VALUE}})</span></div>
+        </div>
+        <div class="card-note">{{CARD_BUNGA_NOTE}}</div>
+        <a href="{{CARD_BUNGA_SOURCE}}" class="card-source">Sumber →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Defisit APBN berjalan</div>
+        <div class="card-value">{{CARD_DEFISIT_VALUE}}</div>
+        <div class="bar-block">
+          <div class="bar-track"><span class="bar-fill" style="width: {{DEFISIT_PDB_PCT}}%;"></span></div>
+          <div class="bar-caption" style="justify-content:flex-start;"><span>{{DEFISIT_PDB_PCT_ID}}% PDB · batas UU {{DEFICIT_LAW_LIMIT_ID}}% PDB</span></div>
+        </div>
+        <div class="card-note">{{CARD_DEFISIT_NOTE}}</div>
+        <a href="{{CARD_DEFISIT_SOURCE}}" class="card-source">Sumber →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Tenor rata-rata utang</div>
+        <div class="card-value">{{CARD_TENOR_VALUE}}</div>
+        <div class="card-note">{{CARD_TENOR_NOTE}}</div>
+        <a href="{{CARD_TENOR_SOURCE}}" class="card-source">Sumber →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section section--context">
+    <div class="section-header">
+      <h2>Konteks</h2>
+      <span class="section-count">3 indikator</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-label">Rasio utang terhadap PDB</div>
+        <div class="card-value">{{CARD_PDB_VALUE}}</div>
+        <div class="bar-rows">
+{{PDB_BAR_ROWS}}
+        </div>
+        <div class="card-note">{{CARD_PDB_NOTE}}</div>
+        <a href="{{CARD_PDB_SOURCE}}" class="card-source">Sumber →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Utang luar negeri pemerintah</div>
+        <div class="card-value">{{CARD_ULN_VALUE}}</div>
+        <div class="card-note">{{CARD_ULN_NOTE}}</div>
+        <a href="{{CARD_ULN_SOURCE}}" class="card-source">Sumber →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Cadangan devisa</div>
+        <div class="card-value">{{CARD_CADEV_VALUE}}</div>
+        <div class="card-note">{{CARD_CADEV_NOTE}}</div>
+        <a href="{{CARD_CADEV_SOURCE}}" class="card-source">Sumber →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="metodologi" class="methodology">
+    <div class="prose">
+      <h2>Metodologi</h2>
+      <p>Angka besar di halaman ini bukan pengukuran waktu nyata. Sejak Oktober 2025, posisi utang pemerintah pusat dilaporkan resmi oleh Kementerian Keuangan setiap triwulan (tiga bulan), biasanya lima sampai tujuh minggu setelah akhir triwulan. Yang kami lakukan sederhana: mengambil rilis resmi terakhir, lalu menambahkannya secara linier memakai laju pertumbuhan utang tahun berjalan.</p>
+      <p>Laju itu dihitung dari selisih posisi utang antara dua rilis triwulanan terakhir, dibagi jumlah detik di antaranya. Untuk penghitung bunga, kami memakai pagu pembayaran bunga utang dalam APBN tahun berjalan dibagi jumlah detik dalam setahun. Keduanya adalah rata-rata, bukan aliran kas harian: penerbitan SBN menumpuk pada lelang dua minggu sekali, dan pembayaran kupon jatuh pada tanggal tertentu.</p>
+      <p>Karena itu, angka yang berjalan di layar Anda adalah estimasi. Selalu lebih andal membaca baris kecil di bawah penghitung, yaitu posisi resmi terakhir beserta tanggalnya. Setiap kali rilis baru terbit, penghitung disetel ulang ke angka resmi itu, sehingga estimasi tidak pernah menyimpang lebih dari satu siklus pelaporan.</p>
+      <p>Cakupannya adalah utang pemerintah pusat: Surat Berharga Negara dan pinjaman, dalam rupiah maupun valuta asing. Tidak termasuk utang BUMN, utang pemerintah daerah, maupun kewajiban yang bersifat kontinjen seperti jaminan proyek. Definisi ini mengikuti laporan Kemenkeu agar angka di sini dapat dibandingkan langsung dengan dokumen resmi.</p>
+      <p>Seluruh kode dan berkas data situs ini terbuka. Bila Anda menemukan kekeliruan angka, asumsi, atau penerjemahan istilah, silakan buka isu di <a href="{{GITHUB_REPO_URL}}">repositori</a>.</p>
+    </div>
+
+    <div id="sumber" class="faq-list">
+      <div class="faq-cell"><div class="faq-label">Pertanyaan umum</div></div>
+      <div class="faq-cell">
+        <div class="faq-question">Apakah angka ini resmi?</div>
+        <div class="faq-answer">Tidak. Situs ini tidak berafiliasi dengan pemerintah. Angka resminya adalah yang tertulis di baris kecil di bawah penghitung, bersumber dari Kemenkeu.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-question">Mengapa berbeda dengan angka di berita?</div>
+        <div class="faq-answer">Berita umumnya mengutip posisi akhir triwulan, sedangkan penghitung ini menambahkan estimasi sejak tanggal tersebut. Perbedaan juga muncul bila sumber lain memasukkan utang BUMN.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-question">Seberapa sering data diperbarui?</div>
+        <div class="faq-answer">Setiap triwulan, mengikuti rilis posisi utang DJPPR Kemenkeu. Bila rilis terlambat, sebuah penanda kecil muncul di dekat penghitung dan menyebutkan umur data.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-question">Bolehkah angka ini dipakai untuk liputan?</div>
+        <div class="faq-answer">Boleh, dengan menyebut posisi resmi dan tanggalnya, bukan angka estimasi per detik. Berkas data mentah tersedia di repositori.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-label">Sumber data</div>
+        <div class="sources-list">
+          <a href="{{SRC_APBN_KITA}}">Kemenkeu — DJPPR, posisi utang triwulanan →</a>
+          <a href="{{SRC_PROFIL_UTANG}}">Kemenkeu — Profil utang & SBN →</a>
+          <a href="{{SRC_SULNI}}">Bank Indonesia — SULNI, utang luar negeri →</a>
+          <a href="{{SRC_BPS}}">BPS — proyeksi penduduk & Sakernas →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-disclaimer">Tidak berafiliasi dengan Pemerintah Republik Indonesia</div>
+    <div class="footer-links">
+      <a href="{{GITHUB_REPO_URL}}">GitHub</a>
+      <a href="/en/">English version</a>
+    </div>
+  </footer>
+
+</div>
+<script type="module" src="/app.js"></script>
+{{CF_ANALYTICS_SNIPPET}}
+</body>
+</html>

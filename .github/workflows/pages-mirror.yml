@@ -1,0 +1,38 @@
+name: Deploy standby mirror to GitHub Pages
+
+# Publishes public/ to GitHub Pages as a standby mirror. Normally
+# hutangindonesia.org 301-redirects to the primary domain; if the primary is
+# blocked, repoint it (or any domain) at this Pages deployment instead. See
+# README "Deploy your own" / mirror instructions.
+#
+# Disabled by default — no schedule or push trigger. Enable by uncommenting
+# the `push` trigger below, or run it manually via workflow_dispatch at any time.
+on:
+  workflow_dispatch: {}
+  # push:
+  #   branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-mirror
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

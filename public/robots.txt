@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://utangindonesia.org/sitemap.xml

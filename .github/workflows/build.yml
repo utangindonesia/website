@@ -1,0 +1,48 @@
+name: Build state
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+  schedule:
+    # Weekly, Monday 00:15 UTC — the debt figures only change when
+    # data/debt.json changes, but this keeps `generated_at` (and therefore
+    # the staleness badge) fresh even during a quiet quarter.
+    - cron: '15 0 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-state
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run unit tests
+        run: node --test
+
+      - name: Build state + pages
+        run: node scripts/build-state.js
+
+      - name: Commit generated output
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/state.json public/index.html public/en/index.html public/sitemap.xml public/robots.txt
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: rebuild state and pages [skip ci]"
+            git push
+          fi

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{META_DESCRIPTION}}">
+<link rel="canonical" href="{{CANONICAL_URL}}">
+<link rel="alternate" hreflang="id" href="{{URL_ID}}">
+<link rel="alternate" hreflang="en" href="{{URL_EN}}">
+<link rel="alternate" hreflang="x-default" href="{{URL_ID}}">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="utangindonesia.org">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="{{TITLE}}">
+<meta property="og:description" content="{{META_DESCRIPTION}}">
+<meta property="og:url" content="{{OG_URL}}">
+<meta property="og:image" content="{{OG_IMAGE_URL}}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{TITLE}}">
+<meta name="twitter:description" content="{{META_DESCRIPTION}}">
+<meta name="twitter:image" content="{{OG_IMAGE_URL}}">
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="alternate icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="alternate icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">{{JSONLD}}</script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-header">
+    <a href="#hero" class="wordmark"><span class="w-accent">utang</span>indonesia<span class="w-dim">.org</span></a>
+    <nav class="site-nav">
+      <a href="#methodology">Methodology</a>
+      <a href="#sources">Sources</a>
+      <a href="/">ID</a>
+    </nav>
+  </header>
+
+  <section id="hero" class="hero">
+    <div class="eyebrow">Central Government Debt, Republic of Indonesia</div>
+    <h1 class="counter" style="margin:0;">
+      <span class="counter-rp">Rp</span>
+      <span class="counter-number" id="counter-number">{{COUNTER_GROUPS_HTML}}</span>
+    </h1>
+    <div class="official-line">Last official figure: {{OFFICIAL_FIGURE_TEXT}} ({{OFFICIAL_DATE_HUMAN}}, Ministry of Finance)</div>
+
+    <div class="interest-ticker">
+      <span class="interest-label">Debt interest</span>
+      <span class="interest-value" id="interest-value">Rp {{INTEREST_VALUE}}</span>
+      <span class="interest-unit">/sec</span>
+    </div>
+
+    <div id="stale-badge" class="stale-badge" data-official-date="{{OFFICIAL_DATE_ISO}}"{{STALE_HIDDEN_ATTR}}>
+      <span class="stale-dot"></span>
+      <span class="stale-text" id="stale-text">Latest data is {{STALE_DAYS}} days old</span>
+      <a href="#methodology" class="stale-link">Why? →</a>
+    </div>
+
+    <noscript>
+      <div class="nojs-note">JavaScript disabled — the figure is held at the last official release, with no per-second estimate.</div>
+    </noscript>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <h2>Debt</h2>
+      <span class="section-count">6 indicators</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-label">Debt per resident</div>
+        <div class="card-value">{{CARD_PER_PENDUDUK_VALUE}}</div>
+        <div class="card-note">{{CARD_PER_PENDUDUK_NOTE_EN}}</div>
+        <a href="{{CARD_PER_PENDUDUK_SOURCE}}" class="card-source">Source →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Debt per worker</div>
+        <div class="card-value">{{CARD_PER_PEKERJA_VALUE}}</div>
+        <div class="card-note">{{CARD_PER_PEKERJA_NOTE_EN}}</div>
+        <a href="{{CARD_PER_PEKERJA_SOURCE}}" class="card-source">Source →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Debt composition</div>
+        <div class="card-value">{{CARD_KOMPOSISI_VALUE_EN}}</div>
+        <div class="bar-block">
+          <div class="bar-track"><span class="bar-fill" style="width: {{SBN_PCT}}%;"></span></div>
+          <div class="bar-caption"><span>Securities {{SBN_PCT_ID}}%</span><span>Loans {{PINJAMAN_PCT_ID}}%</span></div>
+        </div>
+        <div class="card-note">{{CARD_KOMPOSISI_NOTE_EN}}</div>
+        <a href="{{CARD_KOMPOSISI_SOURCE}}" class="card-source">Source →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Interest paid, year to date</div>
+        <div class="card-value">{{CARD_BUNGA_VALUE}}</div>
+        <div class="bar-block">
+          <div class="bar-track"><span class="bar-fill" style="width: {{BUNGA_PCT}}%;"></span></div>
+          <div class="bar-caption" style="justify-content:flex-start;"><span>{{BUNGA_PCT_ID}}% of the full-year budget ({{CARD_BUNGA_PAGU_VALUE}})</span></div>
+        </div>
+        <div class="card-note">{{CARD_BUNGA_NOTE_EN}}</div>
+        <a href="{{CARD_BUNGA_SOURCE}}" class="card-source">Source →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Budget deficit, year to date</div>
+        <div class="card-value">{{CARD_DEFISIT_VALUE}}</div>
+        <div class="bar-block">
+          <div class="bar-track"><span class="bar-fill" style="width: {{DEFISIT_PDB_PCT}}%;"></span></div>
+          <div class="bar-caption" style="justify-content:flex-start;"><span>{{DEFISIT_PDB_PCT_ID}}% of GDP · legal ceiling {{DEFICIT_LAW_LIMIT_ID}}% of GDP</span></div>
+        </div>
+        <div class="card-note">{{CARD_DEFISIT_NOTE_EN}}</div>
+        <a href="{{CARD_DEFISIT_SOURCE}}" class="card-source">Source →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Average debt tenor</div>
+        <div class="card-value">{{CARD_TENOR_VALUE_EN}}</div>
+        <div class="card-note">{{CARD_TENOR_NOTE_EN}}</div>
+        <a href="{{CARD_TENOR_SOURCE}}" class="card-source">Source →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section section--context">
+    <div class="section-header">
+      <h2>Context</h2>
+      <span class="section-count">3 indicators</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-label">Debt-to-GDP ratio</div>
+        <div class="card-value">{{CARD_PDB_VALUE}}</div>
+        <div class="bar-rows">
+{{PDB_BAR_ROWS}}
+        </div>
+        <div class="card-note">{{CARD_PDB_NOTE_EN}}</div>
+        <a href="{{CARD_PDB_SOURCE}}" class="card-source">Source →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Government external debt</div>
+        <div class="card-value">{{CARD_ULN_VALUE}}</div>
+        <div class="card-note">{{CARD_ULN_NOTE_EN}}</div>
+        <a href="{{CARD_ULN_SOURCE}}" class="card-source">Source →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Foreign exchange reserves</div>
+        <div class="card-value">{{CARD_CADEV_VALUE}}</div>
+        <div class="card-note">{{CARD_CADEV_NOTE_EN}}</div>
+        <a href="{{CARD_CADEV_SOURCE}}" class="card-source">Source →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="methodology" class="methodology">
+    <div class="prose">
+      <h2>Methodology</h2>
+      <p>The large number on this page is not a real-time measurement. Since October 2025, Indonesia's central government debt position is officially reported by the Ministry of Finance every quarter, typically five to seven weeks after quarter-end. What we do is simple: take the latest official release, then add to it linearly using this year's debt growth rate.</p>
+      <p>That rate is the difference between the last two quarterly debt positions, divided by the number of seconds between them. For the interest ticker, we use this year's budgeted debt-interest ceiling divided by the number of seconds in a year. Both are averages, not a daily cash flow: government securities are issued in biweekly auctions, and coupon payments fall on specific dates.</p>
+      <p>Because of that, the number ticking on your screen is an estimate. The small line under the counter — the last official position and its date — is always the more reliable figure. Every time a new release is published, the counter resets to that official number, so the estimate never drifts more than one reporting cycle.</p>
+      <p>The scope is central government debt: government securities (SBN) and loans, in both rupiah and foreign currency. It excludes state-owned enterprise debt, regional government debt, and contingent liabilities such as project guarantees. This definition follows Ministry of Finance reporting so the figures here can be compared directly with official documents.</p>
+      <p>All code and data files behind this site are open source. If you find an error in a figure, an assumption, or a translation, please open an issue in the <a href="{{GITHUB_REPO_URL}}">repository</a>.</p>
+    </div>
+
+    <div id="sources" class="faq-list">
+      <div class="faq-cell"><div class="faq-label">Frequently asked</div></div>
+      <div class="faq-cell">
+        <div class="faq-question">Is this an official figure?</div>
+        <div class="faq-answer">No. This site is not affiliated with the government. The official figure is the one printed in the small line under the counter, sourced from the Ministry of Finance.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-question">Why does it differ from the figure in the news?</div>
+        <div class="faq-answer">News reports typically cite the end-of-quarter position, while this counter adds an estimate on top of that date. Differences also arise when another source includes state-owned enterprise debt.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-question">How often is the data updated?</div>
+        <div class="faq-answer">Every quarter, following DJPPR's debt position release. If a release is late, a small badge appears near the counter noting the age of the data.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-question">Can this figure be used for reporting?</div>
+        <div class="faq-answer">Yes, if you cite the official position and its date, not the per-second estimate. The raw data file is available in the repository.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-label">Data sources</div>
+        <div class="sources-list">
+          <a href="{{SRC_APBN_KITA}}">Ministry of Finance — DJPPR, quarterly debt position →</a>
+          <a href="{{SRC_PROFIL_UTANG}}">Ministry of Finance — Debt & securities profile →</a>
+          <a href="{{SRC_SULNI}}">Bank Indonesia — SULNI, external debt →</a>
+          <a href="{{SRC_BPS}}">BPS — population projections & labor force survey →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-disclaimer">Not affiliated with the Government of the Republic of Indonesia</div>
+    <div class="footer-links">
+      <a href="{{GITHUB_REPO_URL}}">GitHub</a>
+      <a href="/">Versi Indonesia</a>
+    </div>
+  </footer>
+
+</div>
+<script type="module" src="/app.js"></script>
+{{CF_ANALYTICS_SNIPPET}}
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Utang Negara Indonesia: Rp 10.293 T — Live</title>
+<meta name="description" content="Penghitung utang pemerintah pusat Indonesia. Angka resmi terakhir Rp 10.293 triliun (30 Juni 2026, Kemenkeu), diinterpolasi per detik. Termasuk utang per penduduk, rasio PDB, dan utang luar negeri.">
+<link rel="canonical" href="https://utangindonesia.org/">
+<link rel="alternate" hreflang="id" href="https://utangindonesia.org/">
+<link rel="alternate" hreflang="en" href="https://utangindonesia.org/en/">
+<link rel="alternate" hreflang="x-default" href="https://utangindonesia.org/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="utangindonesia.org">
+<meta property="og:locale" content="id_ID">
+<meta property="og:title" content="Utang Negara Indonesia: Rp 10.293 T — Live">
+<meta property="og:description" content="Penghitung utang pemerintah pusat Indonesia. Angka resmi terakhir Rp 10.293 triliun (30 Juni 2026, Kemenkeu), diinterpolasi per detik. Termasuk utang per penduduk, rasio PDB, dan utang luar negeri.">
+<meta property="og:url" content="https://utangindonesia.org/">
+<meta property="og:image" content="https://utangindonesia.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Utang Negara Indonesia: Rp 10.293 T — Live">
+<meta name="twitter:description" content="Penghitung utang pemerintah pusat Indonesia. Angka resmi terakhir Rp 10.293 triliun (30 Juni 2026, Kemenkeu), diinterpolasi per detik. Termasuk utang per penduduk, rasio PDB, dan utang luar negeri.">
+<meta name="twitter:image" content="https://utangindonesia.org/og-image.png">
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="alternate icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="alternate icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","name":"Utang Pemerintah Pusat Republik Indonesia","description":"Posisi utang pemerintah pusat Indonesia, diperbarui setiap triwulan dari rilis resmi Kementerian Keuangan.","url":"https://utangindonesia.org/","temporalCoverage":"2026-06-30","creator":{"@type":"Organization","name":"utangindonesia.org"},"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://utangindonesia.org/state.json"}],"variableMeasured":[{"@type":"PropertyValue","name":"Central government debt","value":"10293690000000000","unitText":"IDR"},{"@type":"PropertyValue","name":"Debt-to-GDP ratio","value":41.26,"unitText":"%"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Apakah angka ini resmi?","acceptedAnswer":{"@type":"Answer","text":"Tidak. Situs ini tidak berafiliasi dengan pemerintah. Angka resminya adalah yang tertulis di baris kecil di bawah penghitung, bersumber dari Kemenkeu."}},{"@type":"Question","name":"Mengapa berbeda dengan angka di berita?","acceptedAnswer":{"@type":"Answer","text":"Berita umumnya mengutip posisi akhir triwulan, sedangkan penghitung ini menambahkan estimasi sejak tanggal tersebut. Perbedaan juga muncul bila sumber lain memasukkan utang BUMN."}},{"@type":"Question","name":"Seberapa sering data diperbarui?","acceptedAnswer":{"@type":"Answer","text":"Setiap triwulan, mengikuti rilis posisi utang DJPPR Kemenkeu. Bila rilis terlambat, sebuah penanda kecil muncul di dekat penghitung dan menyebutkan umur data."}},{"@type":"Question","name":"Bolehkah angka ini dipakai untuk liputan?","acceptedAnswer":{"@type":"Answer","text":"Boleh, dengan menyebut posisi resmi dan tanggalnya, bukan angka estimasi per detik. Berkas data mentah tersedia di repositori."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-header">
+    <a href="#hero" class="wordmark"><span class="w-accent">utang</span>indonesia<span class="w-dim">.org</span></a>
+    <nav class="site-nav">
+      <a href="#metodologi">Metodologi</a>
+      <a href="#sumber">Sumber</a>
+      <a href="/en/">EN</a>
+    </nav>
+  </header>
+
+  <section id="hero" class="hero">
+    <div class="eyebrow">Utang Pemerintah Pusat Republik Indonesia</div>
+    <h1 class="counter" style="margin:0;">
+      <span class="counter-rp">Rp</span>
+      <span class="counter-number" id="counter-number"><span>10.</span><span>293.</span><span>690.</span><span>000.</span><span>000.</span><span>000</span></span>
+    </h1>
+    <div class="official-line">Angka resmi terakhir: Rp 10.293 triliun (30 Juni 2026, Kemenkeu)</div>
+
+    <div class="interest-ticker">
+      <span class="interest-label">Bunga utang</span>
+      <span class="interest-value" id="interest-value">Rp 19.008.118</span>
+      <span class="interest-unit">/detik</span>
+    </div>
+
+    <div id="stale-badge" class="stale-badge" data-official-date="2026-06-30" hidden>
+      <span class="stale-dot"></span>
+      <span class="stale-text" id="stale-text">Data terakhir berumur 53 hari</span>
+      <a href="#metodologi" class="stale-link">Kenapa? →</a>
+    </div>
+
+    <noscript>
+      <div class="nojs-note">JavaScript nonaktif — angka ditahan pada rilis resmi terakhir, tanpa estimasi per detik.</div>
+    </noscript>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <h2>Utang</h2>
+      <span class="section-count">6 indikator</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-label">Utang per penduduk</div>
+        <div class="card-value">Rp 35.854.022</div>
+        <div class="card-note">287,1 juta penduduk (BPS, proyeksi 2026)</div>
+        <a href="https://www.bps.go.id/en/statistics-table/3/WVc0MGEyMXBkVFUxY25KeE9HdDZkbTQzWkVkb1p6MDkjMw==/jumlah-penduduk-menurut-kelompok-umur-dan-jenis-kelamin.html" class="card-source">Sumber →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Utang per pekerja</div>
+        <div class="card-value">Rp 69.707.388</div>
+        <div class="card-note">147,67 juta penduduk bekerja (Sakernas, Feb 2026)</div>
+        <a href="https://www.kompas.id/artikel/en-sakernas-februari-2026-indonesia-dinilai-baru-menciptakan-more-jobs-belum-better-jobs" class="card-source">Sumber →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Komposisi utang</div>
+        <div class="card-value">87,1% SBN</div>
+        <div class="bar-block">
+          <div class="bar-track"><span class="bar-fill" style="width: 87.1%;"></span></div>
+          <div class="bar-caption"><span>SBN 87,1%</span><span>Pinjaman 12,9%</span></div>
+        </div>
+        <div class="card-note">20,6% dari SBN dalam valuta asing</div>
+        <a href="https://www.liputan6.com/bisnis/read/8268279/utang-pemerintah-tembus-rp-10293-triliun-per-juni-2026-intip-komposisinya" class="card-source">Sumber →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Pembayaran bunga tahun berjalan</div>
+        <div class="card-value">Rp 281,6 T</div>
+        <div class="bar-block">
+          <div class="bar-track"><span class="bar-fill" style="width: 47,0%;"></span></div>
+          <div class="bar-caption" style="justify-content:flex-start;"><span>47,0% dari pagu setahun (Rp 599,4 T)</span></div>
+        </div>
+        <div class="card-note">Realisasi Januari–Juni 2026</div>
+        <a href="https://news.ddtc.co.id/berita/nasional/1813010/pembayaran-bunga-utang-2026-diusulkan-hampir-rp600-triliun" class="card-source">Sumber →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Defisit APBN berjalan</div>
+        <div class="card-value">Rp 196,5 T</div>
+        <div class="bar-block">
+          <div class="bar-track"><span class="bar-fill" style="width: 0,8%;"></span></div>
+          <div class="bar-caption" style="justify-content:flex-start;"><span>0,8% PDB · batas UU 3,0% PDB</span></div>
+        </div>
+        <div class="card-note">Realisasi Januari–Juni 2026</div>
+        <a href="https://ekonomi.bisnis.com/read/20260726/10/1991138/defisit-apbn-tembus-rp1965-triliun-terbebani-bunga-utang-masa-lalu" class="card-source">Sumber →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Tenor rata-rata utang</div>
+        <div class="card-value">7,7 tahun</div>
+        <div class="card-note">Rata-rata tertimbang sisa jatuh tempo seluruh portofolio (ATM)</div>
+        <a href="https://api-djppr.kemenkeu.go.id/web/api/v1/media/B38F31E4-37E1-43A8-9A69-8AC929F40679" class="card-source">Sumber →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section section--context">
+    <div class="section-header">
+      <h2>Konteks</h2>
+      <span class="section-count">3 indikator</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-label">Rasio utang terhadap PDB</div>
+        <div class="card-value">41,3%</div>
+        <div class="bar-rows">
+              <div class="bar-row"><span>Indonesia</span><span class="bar-track"><span class="bar-fill" style="width: 41.26%;"></span></span><span>41,3%</span></div>
+              <div class="bar-row"><span>Malaysia</span><span class="bar-track"><span class="bar-fill bar-fill--neutral" style="width: 65.3%;"></span></span><span>65,3%</span></div>
+              <div class="bar-row"><span>Thailand</span><span class="bar-track"><span class="bar-fill bar-fill--neutral" style="width: 65.64%;"></span></span><span>65,64%</span></div>
+              <div class="bar-row"><span>Filipina</span><span class="bar-track"><span class="bar-fill bar-fill--neutral" style="width: 63.2%;"></span></span><span>63,2%</span></div>
+        </div>
+        <div class="card-note">Batas UU Keuangan Negara: 60,0% PDB</div>
+        <a href="https://tradingeconomics.com/malaysia/government-debt-to-gdp" class="card-source">Sumber →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Utang luar negeri pemerintah</div>
+        <div class="card-value">USD 216,3 mi</div>
+        <div class="card-note">Bagian dari total utang yang berdenominasi valas; Bank Indonesia, Juni 2026</div>
+        <a href="https://www.jawapos.com/ekonomi/2608180218/rasio-utang-luar-negeri-tetap-terjaga-bi-laporkan-triwulan-ii-sebesar-usd-4534-miliar" class="card-source">Sumber →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Cadangan devisa</div>
+        <div class="card-value">USD 145,3 mi</div>
+        <div class="card-note">Setara 5,3 bulan impor dan pembayaran utang luar negeri pemerintah</div>
+        <a href="https://www.bi.go.id/id/publikasi/ruang-media/news-release/Pages/sp_2815126.aspx" class="card-source">Sumber →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="metodologi" class="methodology">
+    <div class="prose">
+      <h2>Metodologi</h2>
+      <p>Angka besar di halaman ini bukan pengukuran waktu nyata. Sejak Oktober 2025, posisi utang pemerintah pusat dilaporkan resmi oleh Kementerian Keuangan setiap triwulan (tiga bulan), biasanya lima sampai tujuh minggu setelah akhir triwulan. Yang kami lakukan sederhana: mengambil rilis resmi terakhir, lalu menambahkannya secara linier memakai laju pertumbuhan utang tahun berjalan.</p>
+      <p>Laju itu dihitung dari selisih posisi utang antara dua rilis triwulanan terakhir, dibagi jumlah detik di antaranya. Untuk penghitung bunga, kami memakai pagu pembayaran bunga utang dalam APBN tahun berjalan dibagi jumlah detik dalam setahun. Keduanya adalah rata-rata, bukan aliran kas harian: penerbitan SBN menumpuk pada lelang dua minggu sekali, dan pembayaran kupon jatuh pada tanggal tertentu.</p>
+      <p>Karena itu, angka yang berjalan di layar Anda adalah estimasi. Selalu lebih andal membaca baris kecil di bawah penghitung, yaitu posisi resmi terakhir beserta tanggalnya. Setiap kali rilis baru terbit, penghitung disetel ulang ke angka resmi itu, sehingga estimasi tidak pernah menyimpang lebih dari satu siklus pelaporan.</p>
+      <p>Cakupannya adalah utang pemerintah pusat: Surat Berharga Negara dan pinjaman, dalam rupiah maupun valuta asing. Tidak termasuk utang BUMN, utang pemerintah daerah, maupun kewajiban yang bersifat kontinjen seperti jaminan proyek. Definisi ini mengikuti laporan Kemenkeu agar angka di sini dapat dibandingkan langsung dengan dokumen resmi.</p>
+      <p>Seluruh kode dan berkas data situs ini terbuka. Bila Anda menemukan kekeliruan angka, asumsi, atau penerjemahan istilah, silakan buka isu di <a href="https://github.com/utangindonesia/website">repositori</a>.</p>
+    </div>
+
+    <div id="sumber" class="faq-list">
+      <div class="faq-cell"><div class="faq-label">Pertanyaan umum</div></div>
+      <div class="faq-cell">
+        <div class="faq-question">Apakah angka ini resmi?</div>
+        <div class="faq-answer">Tidak. Situs ini tidak berafiliasi dengan pemerintah. Angka resminya adalah yang tertulis di baris kecil di bawah penghitung, bersumber dari Kemenkeu.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-question">Mengapa berbeda dengan angka di berita?</div>
+        <div class="faq-answer">Berita umumnya mengutip posisi akhir triwulan, sedangkan penghitung ini menambahkan estimasi sejak tanggal tersebut. Perbedaan juga muncul bila sumber lain memasukkan utang BUMN.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-question">Seberapa sering data diperbarui?</div>
+        <div class="faq-answer">Setiap triwulan, mengikuti rilis posisi utang DJPPR Kemenkeu. Bila rilis terlambat, sebuah penanda kecil muncul di dekat penghitung dan menyebutkan umur data.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-question">Bolehkah angka ini dipakai untuk liputan?</div>
+        <div class="faq-answer">Boleh, dengan menyebut posisi resmi dan tanggalnya, bukan angka estimasi per detik. Berkas data mentah tersedia di repositori.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-label">Sumber data</div>
+        <div class="sources-list">
+          <a href="https://djppr.kemenkeu.go.id/">Kemenkeu — DJPPR, posisi utang triwulanan →</a>
+          <a href="https://djppr.kemenkeu.go.id/">Kemenkeu — Profil utang & SBN →</a>
+          <a href="https://www.bi.go.id/id/statistik/ekonomi-keuangan/sulni/default.aspx">Bank Indonesia — SULNI, utang luar negeri →</a>
+          <a href="https://www.bps.go.id/">BPS — proyeksi penduduk & Sakernas →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-disclaimer">Tidak berafiliasi dengan Pemerintah Republik Indonesia</div>
+    <div class="footer-links">
+      <a href="https://github.com/utangindonesia/website">GitHub</a>
+      <a href="/en/">English version</a>
+    </div>
+  </footer>
+
+</div>
+<script type="module" src="/app.js"></script>
+
+</body>
+</html>

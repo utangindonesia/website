@@ -1,0 +1,13 @@
+{
+  "name": "utangindonesia-org",
+  "private": true,
+  "type": "module",
+  "description": "Indonesia central government debt clock — static site, no runtime backend.",
+  "scripts": {
+    "build": "node scripts/build-state.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

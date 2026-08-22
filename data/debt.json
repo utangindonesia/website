@@ -1,0 +1,77 @@
+{
+  "debt_series": [
+    { "date": "2025-12-31", "debt_idr": "9637900000000000", "source_url": "https://nasional.kontan.co.id/news/posisi-utang-pemerintah-indonesia-tembus-rp-9637-triliun-rasio-terhadap-pdb-4046" },
+    { "date": "2026-03-31", "debt_idr": "9920400000000000", "source_url": "https://ekonomi.bisnis.com/read/20260508/9/1972274/utang-pemerintah-kuartal-i2026-tembus-rp99204-triliun-rasio-4075-terhadap-pdb" },
+    { "date": "2026-06-30", "debt_idr": "10293690000000000", "source_url": "https://www.cnbcindonesia.com/news/20260812054727-4-758427/utang-pemerintah-rp10293-triliun-masih-aman-ini-penjelasan-kemenkeu" }
+  ],
+  "population": {
+    "value": 287100000,
+    "note": "287,1 juta penduduk (BPS, proyeksi 2026)",
+    "note_en": "287.1 million residents (BPS, 2026 projection)",
+    "source_url": "https://www.bps.go.id/en/statistics-table/3/WVc0MGEyMXBkVFUxY25KeE9HdDZkbTQzWkVkb1p6MDkjMw==/jumlah-penduduk-menurut-kelompok-umur-dan-jenis-kelamin.html"
+  },
+  "workers": {
+    "value": 147670000,
+    "note": "147,67 juta penduduk bekerja (Sakernas, Feb 2026)",
+    "note_en": "147.67 million employed persons (Sakernas, Feb 2026)",
+    "source_url": "https://www.kompas.id/artikel/en-sakernas-februari-2026-indonesia-dinilai-baru-menciptakan-more-jobs-belum-better-jobs"
+  },
+  "gdp_idr": {
+    "value": "24948000000000000",
+    "_note": "Annual GDP implied from the officially reported debt-to-GDP ratio (41.26% at 2026-06-30 debt of Rp10,293.69T), not itself a single official BPS line item — BPS reports nominal GDP per quarter, not a ready trailing-annual total. See source for the ratio this was derived from.",
+    "source_url": "https://www.cnbcindonesia.com/news/20260812054727-4-758427/utang-pemerintah-rp10293-triliun-masih-aman-ini-penjelasan-kemenkeu"
+  },
+  "sbn_share_pct": { "value": 87.1, "source_url": "https://www.liputan6.com/bisnis/read/8268279/utang-pemerintah-tembus-rp-10293-triliun-per-juni-2026-intip-komposisinya" },
+  "fx_debt_share_pct": {
+    "value": 20.61,
+    "_note": "This is SBN's own foreign-currency share (porsi SBN valas), not total-debt FX share — that specific total-debt breakdown was not available from public reporting. Card note wording reflects this.",
+    "source_url": "https://economy.okezone.com/read/2026/08/13/320/3235839/porsi-sbn-valas-indonesia-naik-dinilai-risiko-pelemahan-rupiah-dan-beban-utang"
+  },
+  "interest_ytd_idr": {
+    "value": 281600000000000,
+    "period": "Realisasi Januari–Juni 2026",
+    "period_en": "January–June 2026 realization",
+    "source_url": "https://news.ddtc.co.id/berita/nasional/1813010/pembayaran-bunga-utang-2026-diusulkan-hampir-rp600-triliun"
+  },
+  "interest_annual_idr": {
+    "value": 599440000000000,
+    "source_url": "https://investortrust.id/macro/100822/kemenkeu-jaga-belanja-bunga-utang-2026-tak-melebar-dari-rp-599-44-triliun"
+  },
+  "deficit_ytd_idr": {
+    "value": 196500000000000,
+    "period": "Realisasi Januari–Juni 2026",
+    "period_en": "January–June 2026 realization",
+    "source_url": "https://ekonomi.bisnis.com/read/20260726/10/1991138/defisit-apbn-tembus-rp1965-triliun-terbebani-bunga-utang-masa-lalu"
+  },
+  "deficit_law_limit_pct_gdp": 3.0,
+  "debt_law_limit_pct_gdp": 60,
+  "avg_tenor_years": {
+    "value": 7.7,
+    "note": "Rata-rata tertimbang sisa jatuh tempo seluruh portofolio (ATM)",
+    "note_en": "Weighted average time to maturity of the whole portfolio (ATM)",
+    "source_url": "https://api-djppr.kemenkeu.go.id/web/api/v1/media/B38F31E4-37E1-43A8-9A69-8AC929F40679"
+  },
+  "external_debt_usd": {
+    "value": 216300000000,
+    "as_of": "Bank Indonesia, Juni 2026",
+    "as_of_en": "Bank Indonesia, June 2026",
+    "source_url": "https://www.jawapos.com/ekonomi/2608180218/rasio-utang-luar-negeri-tetap-terjaga-bi-laporkan-triwulan-ii-sebesar-usd-4534-miliar"
+  },
+  "fx_reserves_usd": {
+    "value": 145300000000,
+    "months_equiv": 5.3,
+    "source_url": "https://www.bi.go.id/id/publikasi/ruang-media/news-release/Pages/sp_2815126.aspx"
+  },
+  "gdp_comparison": [
+    { "country": "Malaysia", "country_en": "Malaysia", "pct": 65.3 },
+    { "country": "Thailand", "country_en": "Thailand", "pct": 65.64 },
+    { "country": "Filipina", "country_en": "Philippines", "pct": 63.2 }
+  ],
+  "debt_to_gdp_source_url": "https://tradingeconomics.com/malaysia/government-debt-to-gdp",
+  "sources_general": {
+    "apbn_kita": "https://djppr.kemenkeu.go.id/",
+    "profil_utang": "https://djppr.kemenkeu.go.id/",
+    "sulni": "https://www.bi.go.id/id/statistik/ekonomi-keuangan/sulni/default.aspx",
+    "bps": "https://www.bps.go.id/"
+  }
+}

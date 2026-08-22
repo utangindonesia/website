@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indonesia National Debt: Rp 10.293 T — Live</title>
+<meta name="description" content="A live counter for Indonesia's central government debt. Last official figure Rp 10.293 trillion (30 June 2026, Ministry of Finance), interpolated per second. Includes debt per resident, debt-to-GDP ratio, and external debt.">
+<link rel="canonical" href="https://utangindonesia.org/en/">
+<link rel="alternate" hreflang="id" href="https://utangindonesia.org/">
+<link rel="alternate" hreflang="en" href="https://utangindonesia.org/en/">
+<link rel="alternate" hreflang="x-default" href="https://utangindonesia.org/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="utangindonesia.org">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Indonesia National Debt: Rp 10.293 T — Live">
+<meta property="og:description" content="A live counter for Indonesia's central government debt. Last official figure Rp 10.293 trillion (30 June 2026, Ministry of Finance), interpolated per second. Includes debt per resident, debt-to-GDP ratio, and external debt.">
+<meta property="og:url" content="https://utangindonesia.org/en/">
+<meta property="og:image" content="https://utangindonesia.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Indonesia National Debt: Rp 10.293 T — Live">
+<meta name="twitter:description" content="A live counter for Indonesia's central government debt. Last official figure Rp 10.293 trillion (30 June 2026, Ministry of Finance), interpolated per second. Includes debt per resident, debt-to-GDP ratio, and external debt.">
+<meta name="twitter:image" content="https://utangindonesia.org/og-image.png">
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="alternate icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="alternate icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","name":"Central Government Debt, Republic of Indonesia","description":"Indonesia's central government debt position, updated quarterly from official Ministry of Finance releases.","url":"https://utangindonesia.org/en/","temporalCoverage":"2026-06-30","creator":{"@type":"Organization","name":"utangindonesia.org"},"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://utangindonesia.org/state.json"}],"variableMeasured":[{"@type":"PropertyValue","name":"Central government debt","value":"10293690000000000","unitText":"IDR"},{"@type":"PropertyValue","name":"Debt-to-GDP ratio","value":41.26,"unitText":"%"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this an official figure?","acceptedAnswer":{"@type":"Answer","text":"No. This site is not affiliated with the government. The official figure is the one printed in the small line under the counter, sourced from the Ministry of Finance."}},{"@type":"Question","name":"Why does it differ from the figure in the news?","acceptedAnswer":{"@type":"Answer","text":"News reports typically cite the end-of-quarter position, while this counter adds an estimate on top of that date. Differences also arise when another source includes state-owned enterprise debt."}},{"@type":"Question","name":"How often is the data updated?","acceptedAnswer":{"@type":"Answer","text":"Every quarter, following DJPPR’s debt position release. If a release is late, a small badge appears near the counter noting the age of the data."}},{"@type":"Question","name":"Can this figure be used for reporting?","acceptedAnswer":{"@type":"Answer","text":"Yes, if you cite the official position and its date, not the per-second estimate. The raw data file is available in the repository."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-header">
+    <a href="#hero" class="wordmark"><span class="w-accent">utang</span>indonesia<span class="w-dim">.org</span></a>
+    <nav class="site-nav">
+      <a href="#methodology">Methodology</a>
+      <a href="#sources">Sources</a>
+      <a href="/">ID</a>
+    </nav>
+  </header>
+
+  <section id="hero" class="hero">
+    <div class="eyebrow">Central Government Debt, Republic of Indonesia</div>
+    <h1 class="counter" style="margin:0;">
+      <span class="counter-rp">Rp</span>
+      <span class="counter-number" id="counter-number"><span>10.</span><span>293.</span><span>690.</span><span>000.</span><span>000.</span><span>000</span></span>
+    </h1>
+    <div class="official-line">Last official figure: Rp 10.293 triliun (30 June 2026, Ministry of Finance)</div>
+
+    <div class="interest-ticker">
+      <span class="interest-label">Debt interest</span>
+      <span class="interest-value" id="interest-value">Rp 19.008.118</span>
+      <span class="interest-unit">/sec</span>
+    </div>
+
+    <div id="stale-badge" class="stale-badge" data-official-date="2026-06-30" hidden>
+      <span class="stale-dot"></span>
+      <span class="stale-text" id="stale-text">Latest data is 53 days old</span>
+      <a href="#methodology" class="stale-link">Why? →</a>
+    </div>
+
+    <noscript>
+      <div class="nojs-note">JavaScript disabled — the figure is held at the last official release, with no per-second estimate.</div>
+    </noscript>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <h2>Debt</h2>
+      <span class="section-count">6 indicators</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-label">Debt per resident</div>
+        <div class="card-value">Rp 35.854.022</div>
+        <div class="card-note">287.1 million residents (BPS, 2026 projection)</div>
+        <a href="https://www.bps.go.id/en/statistics-table/3/WVc0MGEyMXBkVFUxY25KeE9HdDZkbTQzWkVkb1p6MDkjMw==/jumlah-penduduk-menurut-kelompok-umur-dan-jenis-kelamin.html" class="card-source">Source →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Debt per worker</div>
+        <div class="card-value">Rp 69.707.388</div>
+        <div class="card-note">147.67 million employed persons (Sakernas, Feb 2026)</div>
+        <a href="https://www.kompas.id/artikel/en-sakernas-februari-2026-indonesia-dinilai-baru-menciptakan-more-jobs-belum-better-jobs" class="card-source">Source →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Debt composition</div>
+        <div class="card-value">87,1% securities</div>
+        <div class="bar-block">
+          <div class="bar-track"><span class="bar-fill" style="width: 87.1%;"></span></div>
+          <div class="bar-caption"><span>Securities 87,1%</span><span>Loans 12,9%</span></div>
+        </div>
+        <div class="card-note">20,6% of government securities (SBN) is foreign-currency denominated</div>
+        <a href="https://www.liputan6.com/bisnis/read/8268279/utang-pemerintah-tembus-rp-10293-triliun-per-juni-2026-intip-komposisinya" class="card-source">Source →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Interest paid, year to date</div>
+        <div class="card-value">Rp 281,6 T</div>
+        <div class="bar-block">
+          <div class="bar-track"><span class="bar-fill" style="width: 47,0%;"></span></div>
+          <div class="bar-caption" style="justify-content:flex-start;"><span>47,0% of the full-year budget (Rp 599,4 T)</span></div>
+        </div>
+        <div class="card-note">January–June 2026 realization</div>
+        <a href="https://news.ddtc.co.id/berita/nasional/1813010/pembayaran-bunga-utang-2026-diusulkan-hampir-rp600-triliun" class="card-source">Source →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Budget deficit, year to date</div>
+        <div class="card-value">Rp 196,5 T</div>
+        <div class="bar-block">
+          <div class="bar-track"><span class="bar-fill" style="width: 0,8%;"></span></div>
+          <div class="bar-caption" style="justify-content:flex-start;"><span>0,8% of GDP · legal ceiling 3,0% of GDP</span></div>
+        </div>
+        <div class="card-note">January–June 2026 realization</div>
+        <a href="https://ekonomi.bisnis.com/read/20260726/10/1991138/defisit-apbn-tembus-rp1965-triliun-terbebani-bunga-utang-masa-lalu" class="card-source">Source →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Average debt tenor</div>
+        <div class="card-value">7,7 years</div>
+        <div class="card-note">Weighted average time to maturity of the whole portfolio (ATM)</div>
+        <a href="https://api-djppr.kemenkeu.go.id/web/api/v1/media/B38F31E4-37E1-43A8-9A69-8AC929F40679" class="card-source">Source →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section section--context">
+    <div class="section-header">
+      <h2>Context</h2>
+      <span class="section-count">3 indicators</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-label">Debt-to-GDP ratio</div>
+        <div class="card-value">41,3%</div>
+        <div class="bar-rows">
+              <div class="bar-row"><span>Indonesia</span><span class="bar-track"><span class="bar-fill" style="width: 41.26%;"></span></span><span>41,3%</span></div>
+              <div class="bar-row"><span>Malaysia</span><span class="bar-track"><span class="bar-fill bar-fill--neutral" style="width: 65.3%;"></span></span><span>65,3%</span></div>
+              <div class="bar-row"><span>Thailand</span><span class="bar-track"><span class="bar-fill bar-fill--neutral" style="width: 65.64%;"></span></span><span>65,64%</span></div>
+              <div class="bar-row"><span>Philippines</span><span class="bar-track"><span class="bar-fill bar-fill--neutral" style="width: 63.2%;"></span></span><span>63,2%</span></div>
+        </div>
+        <div class="card-note">Statutory ceiling: 60,0% of GDP</div>
+        <a href="https://tradingeconomics.com/malaysia/government-debt-to-gdp" class="card-source">Source →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Government external debt</div>
+        <div class="card-value">USD 216,3 mi</div>
+        <div class="card-note">Part of total debt denominated in foreign currency; Bank Indonesia, June 2026</div>
+        <a href="https://www.jawapos.com/ekonomi/2608180218/rasio-utang-luar-negeri-tetap-terjaga-bi-laporkan-triwulan-ii-sebesar-usd-4534-miliar" class="card-source">Source →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Foreign exchange reserves</div>
+        <div class="card-value">USD 145,3 mi</div>
+        <div class="card-note">Equivalent to 5,3 months of imports and government external debt payments</div>
+        <a href="https://www.bi.go.id/id/publikasi/ruang-media/news-release/Pages/sp_2815126.aspx" class="card-source">Source →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="methodology" class="methodology">
+    <div class="prose">
+      <h2>Methodology</h2>
+      <p>The large number on this page is not a real-time measurement. Since October 2025, Indonesia's central government debt position is officially reported by the Ministry of Finance every quarter, typically five to seven weeks after quarter-end. What we do is simple: take the latest official release, then add to it linearly using this year's debt growth rate.</p>
+      <p>That rate is the difference between the last two quarterly debt positions, divided by the number of seconds between them. For the interest ticker, we use this year's budgeted debt-interest ceiling divided by the number of seconds in a year. Both are averages, not a daily cash flow: government securities are issued in biweekly auctions, and coupon payments fall on specific dates.</p>
+      <p>Because of that, the number ticking on your screen is an estimate. The small line under the counter — the last official position and its date — is always the more reliable figure. Every time a new release is published, the counter resets to that official number, so the estimate never drifts more than one reporting cycle.</p>
+      <p>The scope is central government debt: government securities (SBN) and loans, in both rupiah and foreign currency. It excludes state-owned enterprise debt, regional government debt, and contingent liabilities such as project guarantees. This definition follows Ministry of Finance reporting so the figures here can be compared directly with official documents.</p>
+      <p>All code and data files behind this site are open source. If you find an error in a figure, an assumption, or a translation, please open an issue in the <a href="https://github.com/utangindonesia/website">repository</a>.</p>
+    </div>
+
+    <div id="sources" class="faq-list">
+      <div class="faq-cell"><div class="faq-label">Frequently asked</div></div>
+      <div class="faq-cell">
+        <div class="faq-question">Is this an official figure?</div>
+        <div class="faq-answer">No. This site is not affiliated with the government. The official figure is the one printed in the small line under the counter, sourced from the Ministry of Finance.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-question">Why does it differ from the figure in the news?</div>
+        <div class="faq-answer">News reports typically cite the end-of-quarter position, while this counter adds an estimate on top of that date. Differences also arise when another source includes state-owned enterprise debt.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-question">How often is the data updated?</div>
+        <div class="faq-answer">Every quarter, following DJPPR's debt position release. If a release is late, a small badge appears near the counter noting the age of the data.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-question">Can this figure be used for reporting?</div>
+        <div class="faq-answer">Yes, if you cite the official position and its date, not the per-second estimate. The raw data file is available in the repository.</div>
+      </div>
+      <div class="faq-cell">
+        <div class="faq-label">Data sources</div>
+        <div class="sources-list">
+          <a href="https://djppr.kemenkeu.go.id/">Ministry of Finance — DJPPR, quarterly debt position →</a>
+          <a href="https://djppr.kemenkeu.go.id/">Ministry of Finance — Debt & securities profile →</a>
+          <a href="https://www.bi.go.id/id/statistik/ekonomi-keuangan/sulni/default.aspx">Bank Indonesia — SULNI, external debt →</a>
+          <a href="https://www.bps.go.id/">BPS — population projections & labor force survey →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-disclaimer">Not affiliated with the Government of the Republic of Indonesia</div>
+    <div class="footer-links">
+      <a href="https://github.com/utangindonesia/website">GitHub</a>
+      <a href="/">Versi Indonesia</a>
+    </div>
+  </footer>
+
+</div>
+<script type="module" src="/app.js"></script>
+
+</body>
+</html>
