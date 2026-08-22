@@ -159,6 +159,17 @@ function baseTokens(lang) {
     : `A live counter for Indonesia's central government debt. Last official figure Rp ${fmtId(officialTriliun)} trillion (${humanDate(officialDate, 'en')}, Ministry of Finance), interpolated per second. Includes debt per resident, debt-to-GDP ratio, and external debt.`;
   const canonical = isId ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}/en/`;
 
+  // Shared text (see OFFICIAL_FIGURE_TEXT below) so the shared card never
+  // goes stale — built from the same live official figure as the rest of
+  // the page, not a hardcoded placeholder like the design handoff's mock.
+  const officialFigureText = `Rp ${fmtId(officialTriliun)} triliun`;
+  const shareUrl = canonical;
+  const shareText = isId
+    ? `Utang pemerintah pusat Indonesia: ${officialFigureText} per ${humanDate(officialDate, lang)} (Kemenkeu).`
+    : `Indonesia's central government debt: ${officialFigureText} as of ${humanDate(officialDate, lang)} (Ministry of Finance).`;
+  const encShareText = encodeURIComponent(shareText);
+  const encShareUrl = encodeURIComponent(shareUrl);
+
   return {
     TITLE: title,
     META_DESCRIPTION: metaDescription,
@@ -170,10 +181,19 @@ function baseTokens(lang) {
     JSONLD: jsonLd(lang),
 
     COUNTER_GROUPS_HTML: groupsToHtml(baseline),
-    OFFICIAL_FIGURE_TEXT: `Rp ${fmtId(officialTriliun)} triliun`,
+    OFFICIAL_FIGURE_TEXT: officialFigureText,
     OFFICIAL_DATE_HUMAN: humanDate(officialDate, lang),
     OFFICIAL_DATE_ISO: officialDate,
     INTEREST_VALUE: fmtId(Math.round(interestRate)),
+
+    SHARE_TEXT: shareText,
+    SHARE_URL: shareUrl,
+    SHARE_WA: `https://wa.me/?text=${encShareText}%20${encShareUrl}`,
+    SHARE_X: `https://twitter.com/intent/tweet?text=${encShareText}&url=${encShareUrl}`,
+    SHARE_FB: `https://www.facebook.com/sharer/sharer.php?u=${encShareUrl}`,
+    SHARE_TG: `https://t.me/share/url?url=${encShareUrl}&text=${encShareText}`,
+    SHARE_THREADS: `https://www.threads.net/intent/post?text=${encShareText}%20${encShareUrl}`,
+    SHARE_LINE: `https://social-plugins.line.me/lineit/share?url=${encShareUrl}&text=${encShareText}`,
 
     STALE_HIDDEN_ATTR: staleAtBuild ? '' : ' hidden',
     STALE_DAYS: String(Math.max(0, staleDaysAtBuild)),

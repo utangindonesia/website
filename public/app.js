@@ -31,6 +31,37 @@ function updateStaleBadge(officialDate) {
   }
 }
 
+function setupShareButtons() {
+  const buttons = Array.from(document.querySelectorAll('.js-copy-link'));
+  if (!buttons.length) return;
+
+  const shareText = buttons[0].dataset.shareText;
+  const shareUrl = buttons[0].dataset.shareUrl;
+  const originalLabels = buttons.map((btn) => btn.textContent);
+  let copiedTimer;
+
+  async function copyLink() {
+    try {
+      if (navigator.share) {
+        await navigator.share({ text: shareText, url: shareUrl });
+      } else {
+        await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+      }
+    } catch {
+      // Cancelled share or clipboard failure: no error UI, per design spec.
+      return;
+    }
+    // Both the hero and "Bagikan" buttons share the copied state.
+    buttons.forEach((btn) => { btn.textContent = btn.dataset.copiedLabel; });
+    clearTimeout(copiedTimer);
+    copiedTimer = setTimeout(() => {
+      buttons.forEach((btn, i) => { btn.textContent = originalLabels[i]; });
+    }, 2200);
+  }
+
+  buttons.forEach((btn) => btn.addEventListener('click', copyLink));
+}
+
 async function main() {
   let state;
   try {
@@ -71,4 +102,5 @@ async function main() {
   setInterval(() => updateStaleBadge(state.official_date), 60 * 60 * 1000);
 }
 
+setupShareButtons();
 main();

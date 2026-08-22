@@ -67,6 +67,12 @@
       <a href="#methodology" class="stale-link">Why? →</a>
     </div>
 
+    <div class="copy-row">
+      <span class="copy-row-label">Share</span>
+      <button type="button" class="btn btn--primary js-copy-link" data-share-text="{{SHARE_TEXT}}" data-share-url="{{SHARE_URL}}" data-copied-label="Copied ✓">Copy link</button>
+      <a href="#share" class="copy-row-link">Share on social media →</a>
+    </div>
+
     <noscript>
       <div class="nojs-note">JavaScript disabled — the figure is held at the last official release, with no per-second estimate.</div>
     </noscript>
@@ -168,6 +174,20 @@
       </div>
 
     </div>
+  </section>
+
+  <section id="share" class="share-section">
+    <h2>Share</h2>
+    <div class="share-chips">
+      <a href="{{SHARE_WA}}" target="_blank" rel="noopener" class="chip">WhatsApp</a>
+      <a href="{{SHARE_X}}" target="_blank" rel="noopener" class="chip">X</a>
+      <a href="{{SHARE_FB}}" target="_blank" rel="noopener" class="chip">Facebook</a>
+      <a href="{{SHARE_TG}}" target="_blank" rel="noopener" class="chip">Telegram</a>
+      <a href="{{SHARE_THREADS}}" target="_blank" rel="noopener" class="chip">Threads</a>
+      <a href="{{SHARE_LINE}}" target="_blank" rel="noopener" class="chip">LINE</a>
+      <button type="button" class="btn btn--primary js-copy-link" data-share-text="{{SHARE_TEXT}}" data-share-url="{{SHARE_URL}}" data-copied-label="Copied ✓">Copy link</button>
+    </div>
+    <span class="share-caption">The link shares the official figure, not the per-second estimate.</span>
   </section>
 
   <section id="methodology" class="methodology">

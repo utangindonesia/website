@@ -67,6 +67,12 @@
       <a href="#metodologi" class="stale-link">Kenapa? →</a>
     </div>
 
+    <div class="copy-row">
+      <span class="copy-row-label">Bagikan</span>
+      <button type="button" class="btn btn--primary js-copy-link" data-share-text="{{SHARE_TEXT}}" data-share-url="{{SHARE_URL}}" data-copied-label="Tersalin ✓">Salin tautan</button>
+      <a href="#bagikan" class="copy-row-link">Bagikan ke media sosial →</a>
+    </div>
+
     <noscript>
       <div class="nojs-note">JavaScript nonaktif — angka ditahan pada rilis resmi terakhir, tanpa estimasi per detik.</div>
     </noscript>
@@ -168,6 +174,20 @@
       </div>
 
     </div>
+  </section>
+
+  <section id="bagikan" class="share-section">
+    <h2>Bagikan</h2>
+    <div class="share-chips">
+      <a href="{{SHARE_WA}}" target="_blank" rel="noopener" class="chip">WhatsApp</a>
+      <a href="{{SHARE_X}}" target="_blank" rel="noopener" class="chip">X</a>
+      <a href="{{SHARE_FB}}" target="_blank" rel="noopener" class="chip">Facebook</a>
+      <a href="{{SHARE_TG}}" target="_blank" rel="noopener" class="chip">Telegram</a>
+      <a href="{{SHARE_THREADS}}" target="_blank" rel="noopener" class="chip">Threads</a>
+      <a href="{{SHARE_LINE}}" target="_blank" rel="noopener" class="chip">LINE</a>
+      <button type="button" class="btn btn--primary js-copy-link" data-share-text="{{SHARE_TEXT}}" data-share-url="{{SHARE_URL}}" data-copied-label="Tersalin ✓">Salin tautan</button>
+    </div>
+    <span class="share-caption">Tautan membagikan angka resmi, bukan estimasi per detik.</span>
   </section>
 
   <section id="metodologi" class="methodology">
