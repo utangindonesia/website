@@ -106,6 +106,31 @@ test('a short first year does not produce an overlapping year label (real-data s
   assert.equal(labels[0].year, '2014');
 });
 
+test('a short penultimate year does not produce an overlapping label at the end of the series either', () => {
+  // Mirrors the short-first-year case but at the tail: a year with only one
+  // quarter right before the series' final year would otherwise crowd the
+  // true last label. The last label must always survive; its neighbor must
+  // be evicted instead of coexisting in an overlapping position.
+  const series = [];
+  for (let i = 0; i < 44; i++) {
+    const year = 2014 + Math.floor(i / 4);
+    const q = ['03-31', '06-30', '09-30', '12-31'][i % 4];
+    series.push({ date: `${year}-${q}`, government: 100000 + i * 1000 });
+  }
+  series.push({ date: '2025-03-31', government: 145000 }); // 2025: one lone quarter
+  series.push({ date: '2026-03-31', government: 146000 }); // 2026: the true last year
+  series.push({ date: '2026-06-30', government: 147000 });
+
+  const svg = renderLineChart({ series, keys: [KEYS[0]], variant: 'wide', lang: 'id', ariaLabel: 'test' });
+  const labels = [...svg.matchAll(/<text x="([\d.]+)" y="264"[^>]*>(\d{4})<\/text>/g)]
+    .map((m) => ({ x: Number(m[1]), year: m[2] }));
+  for (let i = 1; i < labels.length; i++) {
+    assert.ok(labels[i].x - labels[i - 1].x >= 30, `labels ${labels[i - 1].year}/${labels[i].year} are only ${labels[i].x - labels[i - 1].x}px apart`);
+  }
+  // The true last year must always be shown, even if its neighbor had to go.
+  assert.equal(labels[labels.length - 1].year, '2026');
+});
+
 test('aria-label and title text are XML-escaped', () => {
   const series = synthSeries(8);
   const svg = renderLineChart({

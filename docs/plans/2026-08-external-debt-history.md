@@ -321,11 +321,36 @@ handoff bundle), recreate it faithfully and it overrides the structure sketch be
       `generated_at` in both `public/state.json` and `public/external-debt.json`.
 
 ### T5 — Verification pass (`chore(uln): verify`) — no code unless something is broken
-- [ ] `npm test`, `npm run build` twice (second run must produce no diff except `generated_at`).
-- [ ] Cross-check 3 random series points against the SULNI PDF/xlsx; cross-check the latest
-      government value against `debt.json`'s previous 216.3 bn.
-- [ ] Run `/code-review` on the branch; fix real findings only.
-- [ ] Report: page-weight before/after, SVG size, screenshots at two widths (scratchpad, not committed).
+- [x] `npm test`, `npm run build` twice (second run must produce no diff except `generated_at`).
+      Confirmed for both `public/state.json` and `public/external-debt.json`.
+- [x] Cross-check 3 random series points against the SULNI PDF/xlsx; cross-check the latest
+      government value against `debt.json`'s previous 216.3 bn. Went further than 3 points: pulled
+      the edition's PDF (`pdftotext -layout`) as a source independent of the xlsx parsing path, and
+      found its own printed table for the `private` column, which lists Dec-year-end values through
+      2024 then the trailing ~13 months — every one of its last 5 printed values (2025-06/09/12,
+      2026-03/06) matches `data/external-debt.json`'s `private` field exactly. The PDF narrative's
+      stated growth rates also match `changes()`'s output independently: government YoY at 2026-Q2
+      "2,9% (yoy)" = our computed 2.9%; government YoY at 2026-Q1 "3,8% (yoy)" matches a value
+      recomputed from the stored series (not stored directly); total YoY at 2026-Q2 "4,4% (yoy)"
+      matches our computed 4.4%. `CARD_ULN_VALUE` (USD 216,3 mi) matches the removed
+      `external_debt_usd.value` (216300000000 = 216.3bn) exactly.
+- [x] Run `/code-review` on the branch; fix real findings only. 9 findings; fixed 3, deferred 4 real
+      but out-of-scope ones to `## Follow-ups`, and 2 were working-as-intended (see there for detail).
+      Fixed: (1) `signedPct(null)` now returns `—` like `signedUsdMi(null)`, instead of `''` (would
+      have rendered a dangling `()`); (2) the section-count and chart aria-label's start year was
+      hardcoded `2014` alongside a dynamically-derived latest year — now both derive from
+      `ulnSeries[0].date`, matching the JSON-LD `temporalCoverage` which already did; (3) the
+      year-label collision guard's `isLast` bypass could let the *last two* labels overlap (only the
+      start-of-series case was tested) — reworked so the last label now evicts whichever kept label
+      it would overlap, with a new test covering a short-penultimate-year scenario.
+- [x] Report: page-weight before/after, SVG size, screenshots at two widths (scratchpad, not committed).
+      - `public/index.html` gzipped: 4843 B before this plan -> 7271 B now (+2.4 KB, within 10 KB budget).
+      - `public/en/index.html` gzipped: 7295 B.
+      - Combined `index.html` + `style.css` + `app.js` + `counter.js` gzipped: ~12.4 KB (budget 100 KB).
+      - Wide SVG: 3510 B. Narrow SVG: 3004 B. Combined: 6514 B (budget 8 KB, both variants together).
+      - Screenshots saved to the session scratchpad (not committed): desktop (~828px, wide chart) and
+        mobile (375px, narrow chart, correctly swapped via the 660px media query) — both match the
+        design handoff's shape and last-point labels.
 
 ## 5. Things a cheaper model gets wrong here — read twice
 
@@ -343,6 +368,36 @@ handoff bundle), recreate it faithfully and it overrides the structure sketch be
 7. Don't "fix" `STALE_DAYS_THRESHOLD`, sanity thresholds, or anything outside this plan's scope.
 8. If SULNI numbers can't be read reliably — stop after T1's file skeleton and ask; a wrong number
    shipping live is worse than a late feature.
+
+## Follow-ups
+
+From the T5 `/code-review high` pass — real observations, but out of this plan's scope to fix here
+(would be drive-by changes to code/behavior this plan didn't ask to touch):
+
+- `CARD_CADEV_VALUE` (FX reserves card) still uses the lang-blind `formatUsdBillions()` (always
+  Indonesian-comma formatting, even on `/en/`) — the same class of bug this plan's T3 fixed for
+  `CARD_ULN_VALUE`, left unfixed because CADEV isn't part of this plan. Worth a follow-up pass over
+  every `_EN`-suffixed and shared-token card value on the page.
+- `usdMi`/`signedUsdMi`/`signedPct` in `build-state.js` duplicate the USD-millions-to-billions,
+  lang-aware formatting logic already in `chart.js`'s `usdLabel()`. Both are correct today; a future
+  change to the billions-formatting convention would need to land in both places. Candidate for a
+  shared helper in `scripts/lib/format.js` if a third call site ever appears.
+- `validateExternalSeries`'s strictly-increasing-dates check duplicates `validateDebtSeries`'s
+  (`scripts/lib/debt-math.js`). Consistent with this codebase's existing precedent of duplicating
+  rather than cross-importing between the two debt-series modules (see `STALE_DAYS_THRESHOLD`'s
+  documented rationale for not sharing between `debt-math.js` and `counter.js`), so left as-is, but
+  flagging in case that precedent changes.
+- `ULN_STALE_DAYS_THRESHOLD`'s day-count comparison in `build-state.js` duplicates the shape of
+  `debt-math.js`'s `isStale()` rather than that function taking a threshold parameter. Same
+  duplication-vs-shared-module tradeoff as above.
+
+Two other review findings were assessed and are **not** follow-ups — they're working as intended:
+- The ULN stale badge is static (build-time only, no client-side re-check), unlike the hero's badge.
+  This matches D4 and the design handoff exactly ("Nothing in this section needs JS... State 1c
+  \[no-JS\] is byte-identical to 1a") — not a gap, a deliberate constraint.
+- `pointAtOrBefore` in `scripts/lib/external-debt.js` has no call site in `build-state.js` yet. It's
+  explicit, named T1 API surface per this plan ("`latestPoint(series)`, `pointAtOrBefore(series,
+  isoDate)`"), kept for future use (e.g. "what was ULN as of date X"), not dead code by mistake.
 
 ## 6. Definition of done
 

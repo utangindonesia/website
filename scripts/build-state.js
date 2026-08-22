@@ -86,9 +86,9 @@ function signedUsdMi(change, lang) {
   return `${sign}${usdMi(Math.abs(change.abs), lang)}`;
 }
 
-/** Same change -> signed "+1,1%" / "" */
+/** Same change -> signed "+1,1%" / "—" (matches signedUsdMi's null placeholder) */
 function signedPct(change, lang) {
-  if (!change) return '';
+  if (!change) return '—';
   const sign = change.pct < 0 ? '-' : '+';
   return `${sign}${fmt1dp(Math.abs(change.pct), lang)}%`;
 }
@@ -108,10 +108,11 @@ function ulnChartKeys(lang) {
 }
 
 function ulnAriaLabel(lang) {
+  const firstYear = ulnSeries[0].date.slice(0, 4);
   const latestYear = ulnLatest.date.slice(0, 4);
   return lang === 'en'
-    ? `Line chart of government and total national external debt, 2014–${latestYear}, USD billion`
-    : `Grafik garis posisi utang luar negeri pemerintah dan total nasional, 2014–${latestYear}, USD miliar`;
+    ? `Line chart of government and total national external debt, ${firstYear}–${latestYear}, USD billion`
+    : `Grafik garis posisi utang luar negeri pemerintah dan total nasional, ${firstYear}–${latestYear}, USD miliar`;
 }
 
 function ulnChartSvg(variant, lang) {
@@ -336,7 +337,7 @@ function baseTokens(lang) {
     CARD_ULN_NOTE_EN: `Part of total debt denominated in foreign currency; Bank Indonesia, ${humanDate(ulnLatest.date, 'en').replace(/^\d+\s+/, '')}`,
     CARD_ULN_SOURCE: externalDebt.source_url,
 
-    ULN_SECTION_COUNT: isId ? `2014–${ulnLatest.date.slice(0, 4)} · triwulanan` : `2014–${ulnLatest.date.slice(0, 4)} · quarterly`,
+    ULN_SECTION_COUNT: isId ? `${ulnSeries[0].date.slice(0, 4)}–${ulnLatest.date.slice(0, 4)} · triwulanan` : `${ulnSeries[0].date.slice(0, 4)}–${ulnLatest.date.slice(0, 4)} · quarterly`,
     ULN_LATEST_VALUE: usdMi(ulnLatest.government, lang),
     ULN_TOTAL_VALUE: usdMi(ulnLatest.total, lang),
     ULN_LATEST_DATE_HUMAN: humanDate(ulnLatest.date, lang),

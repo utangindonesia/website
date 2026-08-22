@@ -118,11 +118,24 @@ export function renderLineChart({ series, keys, variant, lang, ariaLabel }) {
 
   // Both variants render year labels at the same font-size (11), so overlap
   // math is identical regardless of the narrower viewBox's tighter space.
+  // The series' true first and last marks always survive; the last mark
+  // additionally evicts whichever already-kept marks it would overlap
+  // (rather than being skipped itself), so the guarantee "no two rendered
+  // labels overlap" holds at both ends, not just the start of the series.
   const thinned = [];
   withExtent.forEach((mark, idx) => {
     const isLast = idx === withExtent.length - 1;
     const lastKept = thinned[thinned.length - 1];
-    if (!lastKept || isLast || mark.left >= lastKept.right + LABEL_GAP) thinned.push(mark);
+    if (!lastKept) {
+      thinned.push(mark);
+    } else if (isLast) {
+      while (thinned.length > 1 && mark.left < thinned[thinned.length - 1].right + LABEL_GAP) {
+        thinned.pop();
+      }
+      thinned.push(mark);
+    } else if (mark.left >= lastKept.right + LABEL_GAP) {
+      thinned.push(mark);
+    }
   });
   yearMarks = thinned;
 
