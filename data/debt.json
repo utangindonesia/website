@@ -51,12 +51,6 @@
     "note_en": "Weighted average time to maturity of the whole portfolio (ATM)",
     "source_url": "https://api-djppr.kemenkeu.go.id/web/api/v1/media/B38F31E4-37E1-43A8-9A69-8AC929F40679"
   },
-  "external_debt_usd": {
-    "value": 216300000000,
-    "as_of": "Bank Indonesia, Juni 2026",
-    "as_of_en": "Bank Indonesia, June 2026",
-    "source_url": "https://www.jawapos.com/ekonomi/2608180218/rasio-utang-luar-negeri-tetap-terjaga-bi-laporkan-triwulan-ii-sebesar-usd-4534-miliar"
-  },
   "fx_reserves_usd": {
     "value": 145300000000,
     "months_equiv": 5.3,

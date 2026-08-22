@@ -240,12 +240,16 @@ Per `## Reconciliation`, this renders **two** SVG variants (wide/narrow), not on
 ### T3 — Section, tokens, CSS (`feat(uln): external debt history section`)
 If a design artboard exists for this cell (see `2026-08-external-debt-history.design-brief.md` and the
 handoff bundle), recreate it faithfully and it overrides the structure sketch below.
-- [ ] In `baseTokens()` add tokens: `ULN_CHART_SVG_WIDE`, `ULN_CHART_SVG_NARROW`, `ULN_LATEST_VALUE` (USD bn, formatted),
+- [x] In `baseTokens()` add tokens: `ULN_CHART_SVG_WIDE`, `ULN_CHART_SVG_NARROW`, `ULN_LATEST_VALUE` (USD bn, formatted),
       `ULN_LATEST_DATE_HUMAN`, `ULN_QOQ_*`, `ULN_YOY_*`, `ULN_5Y_*` (value + sign + pct, each with
       `_EN` variants where wording differs), `ULN_EDITION`, `ULN_SOURCE_URL`, `ULN_TOTAL_VALUE`, `ULN_STALE_BADGE`, `ULN_SECTION_COUNT`,
       `ULN_DATA_URL` (`/external-debt.json`).
-- [ ] Add the section to **both** `templates/index.id.html` and `templates/index.en.html` between
-      Konteks and Bagikan. Structure:
+- [x] Add the section to **both** `templates/index.id.html` and `templates/index.en.html` between
+      Konteks and Bagikan. Structure (refined slightly from the sketch below during implementation —
+      `.card-value-row` wraps value/date/badge so `.card-value` keeps its plain single-value styling
+      used elsewhere on the page; `.chart-legend-swatches`/`.chart-swatch`/`.delta-label`/`.delta-value`/
+      `.delta-pct` are the concrete classes behind the placeholders — see `public/style.css` and the
+      templates themselves for the exact markup actually shipped):
       ```
       <section class="section section--uln">
         <div class="section-header"><h2>{section title}</h2><span class="section-count">{section count}</span></div>
@@ -262,7 +266,7 @@ handoff bundle), recreate it faithfully and it overrides the structure sketch be
       </section>
       ```
       All `{…}` strings come from the §3b table (ID and EN columns) — do not paraphrase them.
-- [ ] CSS in `public/style.css`, using existing tokens only: reuse `.card-grid`/`.card`'s existing
+- [x] CSS in `public/style.css`, using existing tokens only: reuse `.card-grid`/`.card`'s existing
       1px hairline-grid language for the single-cell section (`grid-template-columns: 1fr`) — this
       already matches the handoff's cell chrome one-for-one, no new full-width override needed.
       `.chart svg { display:block; width:100%; height:auto }`,
@@ -276,15 +280,23 @@ handoff bundle), recreate it faithfully and it overrides the structure sketch be
       delta numbers in `var(--text)`, labels in `var(--muted)` — **never** red/green for up/down
       (credible, not alarmist). **No new colours.** Respect `prefers-reduced-motion` (there is no
       motion — keep it that way).
-- [ ] Remove `external_debt_usd` from `data/debt.json`; make `CARD_ULN_VALUE/NOTE/SOURCE` derive
-      from the new series (D6). Keep the card's wording.
-- [ ] Mobile: below 660px the narrow SVG variant takes over (see CSS bullet above — this replaces
+- [x] Remove `external_debt_usd` from `data/debt.json`; make `CARD_ULN_VALUE/NOTE/SOURCE` derive
+      from the new series (D6). Keep the card's wording. (`CARD_ULN_VALUE` now formats per `lang`
+      too, fixing a pre-existing bug where the EN page showed the Indonesian-comma value — in scope
+      since this exact line was being rewritten anyway, not a drive-by fix elsewhere.)
+- [x] Mobile: below 660px the narrow SVG variant takes over (see CSS bullet above — this replaces
       any X-label-hiding logic), legend wraps, delta chips collapse to one per row via the auto-fit
       grid on its own (§3b, Reconciliation item 3).
-- [ ] Stale state: `ULN_STALE_BADGE` renders the existing amber badge markup when the latest quarter is > 150 days old at build, else empty string (§3b).
-- Acceptance: `npm run build`, open `public/index.html` and `public/en/index.html` in a browser at
-      360 px and 1140 px widths; chart legible, no horizontal scroll, no missing-token build error.
-      `public/index.html` gzipped size growth ≤ 10 KB (`gzip -c public/index.html | wc -c` before/after).
+- [x] Stale state: `ULN_STALE_BADGE` renders the existing amber badge markup when the latest quarter is > 150 days old at build, else empty string (§3b).
+- Acceptance: `npm run build` green; verified in Chrome at both 1140px and ~371px (an iframe pinned to
+      375 CSS px, since this environment's window resize doesn't reach the page's viewport) — chart
+      legible at both, narrow SVG swaps in correctly below 660px, delta chips stack to one column,
+      legend wraps, no horizontal scroll, no missing-token error. Stale badge verified by temporarily
+      truncating a scratch copy of the series to an old last date and rebuilding (both languages showed
+      the correct copy), then restoring the real data and rebuilding clean again.
+      `public/index.html` gzipped: 4843 B before this plan → 6948 B now (+2.1 KB, within the 10 KB
+      budget). Combined index.html+style.css+app.js+counter.js gzipped ≈ 12 KB, well under the
+      handoff's 100 KB page-weight budget.
 
 ### T4 — Export, SEO, methodology (`feat(uln): dataset export + methodology`)
 - [ ] Write `public/external-debt.json` from `build-state.js`; add it to the CI `git add` list.

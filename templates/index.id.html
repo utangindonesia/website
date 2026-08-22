@@ -176,6 +176,50 @@
     </div>
   </section>
 
+  <section class="section section--uln">
+    <div class="section-header">
+      <h2>Utang luar negeri</h2>
+      <span class="section-count">{{ULN_SECTION_COUNT}}</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card">
+        <div class="card-label">Posisi utang luar negeri pemerintah, triwulanan</div>
+        <div class="card-value-row">
+          <span class="card-value">{{ULN_LATEST_VALUE}}</span>
+          <span class="card-date">{{ULN_LATEST_DATE_HUMAN}}</span>
+          {{ULN_STALE_BADGE}}
+        </div>
+        <div class="chart chart--wide">{{ULN_CHART_SVG_WIDE}}</div>
+        <div class="chart chart--narrow">{{ULN_CHART_SVG_NARROW}}</div>
+        <div class="chart-legend">
+          <div class="chart-legend-swatches">
+            <span class="chart-legend-item"><span class="chart-swatch chart-swatch--government"></span>Pemerintah</span>
+            <span class="chart-legend-item"><span class="chart-swatch chart-swatch--total"></span>Total nasional</span>
+          </div>
+          <span class="chart-legend-unit">USD miliar</span>
+        </div>
+        <div class="delta-row">
+          <div class="delta">
+            <span class="delta-label">vs triwulan lalu</span>
+            <span class="delta-value">{{ULN_QOQ_VALUE}} <span class="delta-pct">({{ULN_QOQ_PCT}})</span></span>
+          </div>
+          <div class="delta">
+            <span class="delta-label">vs setahun lalu</span>
+            <span class="delta-value">{{ULN_YOY_VALUE}} <span class="delta-pct">({{ULN_YOY_PCT}})</span></span>
+          </div>
+          <div class="delta">
+            <span class="delta-label">5 tahun</span>
+            <span class="delta-value">{{ULN_5Y_VALUE}} <span class="delta-pct">({{ULN_5Y_PCT}})</span></span>
+          </div>
+        </div>
+        <div class="card-note">Termasuk SBN yang dipegang nonresiden · {{ULN_EDITION}}</div>
+        <a href="{{ULN_SOURCE_URL}}" class="card-source">Sumber →</a>
+      </div>
+
+    </div>
+  </section>
+
   <section id="bagikan" class="share-section">
     <h2>Bagikan</h2>
     <div class="share-chips">

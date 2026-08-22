@@ -17,8 +17,9 @@ import {
   isStale,
   STALE_DAYS_THRESHOLD,
 } from './lib/debt-math.js';
-import { fmtId, fmtId1dp, groupsToHtml, formatTriliunIdr, formatUsdBillions, humanDate } from './lib/format.js';
-import { validateExternalSeries } from './lib/external-debt.js';
+import { fmtId, fmtId1dp, fmt1dp, groupsToHtml, formatTriliunIdr, formatUsdBillions, humanDate } from './lib/format.js';
+import { validateExternalSeries, latestPoint, changes } from './lib/external-debt.js';
+import { renderLineChart } from './lib/chart.js';
 import { SITE_ORIGIN, GITHUB_REPO_URL, CF_BEACON_TOKEN } from './site-config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -57,6 +58,65 @@ const perCapitaValue = perCapita(baseline, data.population.value);
 const perWorkerValue = perCapita(baseline, data.workers.value);
 const interestRate = interestRatePerSec(data.interest_annual_idr.value);
 const deficitPdbPct = debtToGdpPct(BigInt(Math.round(data.deficit_ytd_idr.value)), gdpValue);
+
+// --- external debt (ULN) section --------------------------------------------
+// A release older than this makes the ULN card show its own stale badge.
+// Deliberately separate from STALE_DAYS_THRESHOLD (120d, tuned to Kemenkeu's
+// quarterly rupiah-debt cadence): SULNI editions land ~2 months after
+// quarter-end, a longer lag than DJPPR's, so 150d gives the same "couple of
+// weeks' buffer past a normal-length wait" without false-flagging routinely.
+const ULN_STALE_DAYS_THRESHOLD = 150;
+
+const ulnSeries = externalDebt.series;
+const ulnLatest = latestPoint(ulnSeries);
+const ulnChanges = changes(ulnSeries);
+const ulnStaleDays = staleDays(ulnLatest.date, now);
+const ulnIsStale = ulnStaleDays > ULN_STALE_DAYS_THRESHOLD;
+
+/** USD millions -> localized "USD {n} mi"/"USD {n} bn" (no sign) */
+function usdMi(valueMillion, lang) {
+  const bn = valueMillion / 1000;
+  return lang === 'en' ? `USD ${fmt1dp(bn, lang)} bn` : `USD ${fmt1dp(bn, lang)} mi`;
+}
+
+/** A qoq/yoy/fiveYear change from external-debt.js's changes() -> signed "+USD 2,4 mi" / "—" */
+function signedUsdMi(change, lang) {
+  if (!change) return '—';
+  const sign = change.abs < 0 ? '-' : '+';
+  return `${sign}${usdMi(Math.abs(change.abs), lang)}`;
+}
+
+/** Same change -> signed "+1,1%" / "" */
+function signedPct(change, lang) {
+  if (!change) return '';
+  const sign = change.pct < 0 ? '-' : '+';
+  return `${sign}${fmt1dp(Math.abs(change.pct), lang)}%`;
+}
+
+function ulnStaleBadge(lang) {
+  if (!ulnIsStale) return '';
+  const text = lang === 'en' ? `Latest data is ${ulnStaleDays} days old` : `Data terakhir berumur ${ulnStaleDays} hari`;
+  const link = lang === 'en' ? { href: '#methodology', text: 'Why? →' } : { href: '#metodologi', text: 'Kenapa? →' };
+  return `<span class="stale-badge stale-badge--inline"><span class="stale-dot"></span><span class="stale-text">${text}</span><a href="${link.href}" class="stale-link">${link.text}</a></span>`;
+}
+
+function ulnChartKeys(lang) {
+  return [
+    { field: 'government', className: 'chart-line--government', labelClassName: 'chart-label--government', label: lang === 'en' ? 'Government' : 'Pemerintah', strokeWidth: 2 },
+    { field: 'total', className: 'chart-line--total', labelClassName: 'chart-label--total', label: lang === 'en' ? 'National total' : 'Total nasional', strokeWidth: 1.5 },
+  ];
+}
+
+function ulnAriaLabel(lang) {
+  const latestYear = ulnLatest.date.slice(0, 4);
+  return lang === 'en'
+    ? `Line chart of government and total national external debt, 2014–${latestYear}, USD billion`
+    : `Grafik garis posisi utang luar negeri pemerintah dan total nasional, 2014–${latestYear}, USD miliar`;
+}
+
+function ulnChartSvg(variant, lang) {
+  return renderLineChart({ series: ulnSeries, keys: ulnChartKeys(lang), variant, lang, ariaLabel: ulnAriaLabel(lang) });
+}
 
 // --- public/state.json -----------------------------------------------------
 const state = {
@@ -250,10 +310,34 @@ function baseTokens(lang) {
     CARD_PDB_SOURCE: data.debt_to_gdp_source_url,
     PDB_BAR_ROWS: isId ? renderPdbRows() : renderPdbRowsEn(),
 
-    CARD_ULN_VALUE: formatUsdBillions(data.external_debt_usd.value),
-    CARD_ULN_NOTE: `Bagian dari total utang yang berdenominasi valas; ${data.external_debt_usd.as_of}`,
-    CARD_ULN_NOTE_EN: `Part of total debt denominated in foreign currency; ${data.external_debt_usd.as_of_en}`,
-    CARD_ULN_SOURCE: data.external_debt_usd.source_url,
+    CARD_ULN_VALUE: usdMi(ulnLatest.government, lang),
+    CARD_ULN_NOTE: `Bagian dari total utang yang berdenominasi valas; Bank Indonesia, ${humanDate(ulnLatest.date, 'id').replace(/^\d+\s+/, '')}`,
+    CARD_ULN_NOTE_EN: `Part of total debt denominated in foreign currency; Bank Indonesia, ${humanDate(ulnLatest.date, 'en').replace(/^\d+\s+/, '')}`,
+    CARD_ULN_SOURCE: externalDebt.source_url,
+
+    ULN_SECTION_COUNT: isId ? `2014–${ulnLatest.date.slice(0, 4)} · triwulanan` : `2014–${ulnLatest.date.slice(0, 4)} · quarterly`,
+    ULN_LATEST_VALUE: usdMi(ulnLatest.government, lang),
+    ULN_TOTAL_VALUE: usdMi(ulnLatest.total, lang),
+    ULN_LATEST_DATE_HUMAN: humanDate(ulnLatest.date, lang),
+    ULN_EDITION: isId ? externalDebt.edition : externalDebt.edition_en,
+    ULN_SOURCE_URL: externalDebt.source_url,
+    ULN_DATA_URL: '/external-debt.json',
+    ULN_STALE_BADGE: ulnStaleBadge(lang),
+    ULN_CHART_SVG_WIDE: ulnChartSvg('wide', lang),
+    ULN_CHART_SVG_NARROW: ulnChartSvg('narrow', lang),
+
+    ULN_QOQ_VALUE: signedUsdMi(ulnChanges.qoq, 'id'),
+    ULN_QOQ_VALUE_EN: signedUsdMi(ulnChanges.qoq, 'en'),
+    ULN_QOQ_PCT: signedPct(ulnChanges.qoq, 'id'),
+    ULN_QOQ_PCT_EN: signedPct(ulnChanges.qoq, 'en'),
+    ULN_YOY_VALUE: signedUsdMi(ulnChanges.yoy, 'id'),
+    ULN_YOY_VALUE_EN: signedUsdMi(ulnChanges.yoy, 'en'),
+    ULN_YOY_PCT: signedPct(ulnChanges.yoy, 'id'),
+    ULN_YOY_PCT_EN: signedPct(ulnChanges.yoy, 'en'),
+    ULN_5Y_VALUE: signedUsdMi(ulnChanges.fiveYear, 'id'),
+    ULN_5Y_VALUE_EN: signedUsdMi(ulnChanges.fiveYear, 'en'),
+    ULN_5Y_PCT: signedPct(ulnChanges.fiveYear, 'id'),
+    ULN_5Y_PCT_EN: signedPct(ulnChanges.fiveYear, 'en'),
 
     CARD_CADEV_VALUE: formatUsdBillions(data.fx_reserves_usd.value),
     CARD_CADEV_NOTE: `Setara ${fmtId1dp(data.fx_reserves_usd.months_equiv)} bulan impor dan pembayaran utang luar negeri pemerintah`,

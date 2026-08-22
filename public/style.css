@@ -295,6 +295,129 @@ a:hover { color: var(--accent-hover); }
   padding-top: 8px;
 }
 
+/* External debt (ULN) section */
+.section--uln .card-value-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+}
+
+.section--uln .card-date {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  color: var(--muted-3);
+}
+
+.stale-badge--inline {
+  padding: 5px 9px;
+  gap: 8px;
+  margin-top: 0;
+  align-self: auto;
+}
+.stale-badge--inline .stale-text {
+  font-size: 12px;
+}
+
+.chart svg.chart-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 6px 0 2px;
+  overflow: visible;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.chart--narrow { display: none; }
+
+.chart-line--government { color: var(--accent); }
+.chart-line--total { color: var(--dim-2); }
+.chart-label--government { color: var(--accent-hover); }
+.chart-label--total { color: var(--text-answer); }
+.chart-axis-x, .chart-axis-y { fill: var(--dim); }
+
+@media (max-width: 660px) {
+  .chart--wide { display: none; }
+  .chart--narrow { display: block; }
+}
+
+.section--uln .chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 20px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted-3);
+}
+
+.section--uln .chart-legend-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+}
+
+.section--uln .chart-legend-item {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.section--uln .chart-swatch {
+  width: 14px;
+  height: 2px;
+  margin-top: 7px;
+  flex: none;
+}
+.section--uln .chart-swatch--government { background: var(--accent); }
+.section--uln .chart-swatch--total { background: var(--dim-2); }
+
+.section--uln .chart-legend-unit {
+  color: var(--dim-2);
+}
+
+.section--uln .delta-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-top: 6px;
+}
+
+.section--uln .delta {
+  background: var(--surface-alt);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.section--uln .delta-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.section--uln .delta-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+  font-size: 16px;
+  color: var(--text);
+}
+
+.section--uln .delta-pct {
+  font-size: 13px;
+  color: var(--muted-3);
+}
+
 /* Comparison bars */
 .bar-block {
   display: flex;
