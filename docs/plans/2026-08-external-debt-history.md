@@ -64,6 +64,32 @@ Rules: dates strictly increasing and each must be a quarter-end (`-03-31`, `-06-
 every value `> 0`; consecutive `total` must not jump more than **±25 %** (typo guard, same spirit
 as `checkRateSanity`). Minimum 8 points.
 
+### 3b. Copy & visual spec — single source shared with the design brief
+
+Precedence when documents disagree: **handoff artboard/README addendum > design brief > this plan**
+for anything visual; **this plan** for data, code, tokens, and the strings below. The brief must not
+restate these strings — it references this table. Change wording here, nowhere else.
+
+| Key | ID | EN |
+|-----|----|----|
+| section title | Utang luar negeri | External debt |
+| section count | 2014–{latest year} · triwulanan | 2014–{latest year} · quarterly |
+| card label | Posisi utang luar negeri pemerintah, triwulanan | Government external debt position, quarterly |
+| card value | USD {n} mi | USD {n} bn |
+| value date (mono, next to value) | {humanDate id} | {humanDate en} |
+| legend | Pemerintah · Total nasional | Government · National total |
+| delta 1 | vs triwulan lalu | vs last quarter |
+| delta 2 | vs setahun lalu | vs a year ago |
+| delta 3 | 5 tahun | 5 years |
+| note | Termasuk SBN yang dipegang nonresiden · {edition} | Includes SBN held by non-residents · {edition_en} |
+| source link | Sumber → | Source → |
+| chart aria-label | Grafik garis posisi utang luar negeri pemerintah dan total nasional, 2014–{latest}, USD miliar | Line chart of government and total national external debt, 2014–{latest}, USD billion |
+
+Visual defaults (the brief may override; then update here): chart `W=960`, `H=360` desktop; Y from 0;
+4–5 gridlines; yearly X labels, every other one hidden ≤ 600 px; last-point dot + mono value label;
+legend wraps under chart on mobile; delta chips **stack one per row** ≤ 600 px; stale state (latest
+quarter > 150 days old at build) reuses the existing amber badge next to the value date — no new style.
+
 Generated (build output, never hand-edit; add to the CI `git add` list in `.github/workflows/build.yml`):
 `public/external-debt.json` — a copy of the series plus `generated_at`, for readers who want the raw
 numbers; referenced from the JSON-LD `Dataset.distribution` and the "Sumber data" list.
@@ -112,26 +138,25 @@ If a design artboard exists for this cell (see `2026-08-external-debt-history.de
 handoff bundle), recreate it faithfully and it overrides the structure sketch below.
 - [ ] In `baseTokens()` add tokens: `ULN_CHART_SVG`, `ULN_LATEST_VALUE` (USD bn, formatted),
       `ULN_LATEST_DATE_HUMAN`, `ULN_QOQ_*`, `ULN_YOY_*`, `ULN_5Y_*` (value + sign + pct, each with
-      `_EN` variants where wording differs), `ULN_EDITION`, `ULN_SOURCE_URL`, `ULN_TOTAL_VALUE`,
+      `_EN` variants where wording differs), `ULN_EDITION`, `ULN_SOURCE_URL`, `ULN_TOTAL_VALUE`, `ULN_STALE_BADGE`, `ULN_SECTION_COUNT`,
       `ULN_DATA_URL` (`/external-debt.json`).
 - [ ] Add the section to **both** `templates/index.id.html` and `templates/index.en.html` between
       Konteks and Bagikan. Structure:
       ```
       <section class="section section--uln">
-        <div class="section-header"><h2>Utang luar negeri</h2><span class="section-count">sejak 2014</span></div>
+        <div class="section-header"><h2>{section title}</h2><span class="section-count">{section count}</span></div>
         <div class="card card--wide">
-          <div class="card-label">Posisi ULN pemerintah, triwulanan (USD)</div>
-          <div class="card-value">{{ULN_LATEST_VALUE}}</div>
+          <div class="card-label">{card label}</div>
+          <div class="card-value">{{ULN_LATEST_VALUE}} <span class="card-date">{{ULN_LATEST_DATE_HUMAN}}</span> {{ULN_STALE_BADGE}}</div>
           <div class="chart">{{ULN_CHART_SVG}}</div>
-          <div class="chart-legend">… (two swatches: Pemerintah / Total nasional)</div>
-          <div class="delta-row">… three .delta chips: vs triwulan lalu / vs tahun lalu / 5 tahun</div>
-          <div class="card-note">Termasuk SBN yang dipegang nonresiden; {{ULN_EDITION}}</div>
+          <div class="chart-legend">… two text swatches: {legend}</div>
+          <div class="delta-row">… three .delta chips: {delta 1} / {delta 2} / {delta 3}</div>
+          <div class="card-note">{note}</div>
           <a href="{{ULN_SOURCE_URL}}" class="card-source">Sumber →</a>
         </div>
       </section>
       ```
-      English copy: "External debt" / "since 2014" / "Government external debt, quarterly (USD)" /
-      "vs last quarter" / "vs a year ago" / "5 years" / "Includes SBN held by non-residents".
+      All `{…}` strings come from the §3b table (ID and EN columns) — do not paraphrase them.
 - [ ] CSS in `public/style.css`, using existing tokens only: `.card--wide { grid-column: 1 / -1 }`
       is NOT available (section isn't in a grid) — instead make `.section--uln .card` full width.
       `.chart svg { display:block; width:100%; height:auto }`, `.chart-line--government { stroke: var(--accent) }`,
@@ -142,7 +167,8 @@ handoff bundle), recreate it faithfully and it overrides the structure sketch be
       keep it that way).
 - [ ] Remove `external_debt_usd` from `data/debt.json`; make `CARD_ULN_VALUE/NOTE/SOURCE` derive
       from the new series (D6). Keep the card's wording.
-- [ ] Mobile: at ≤ 600 px hide every other X label (class `chart-x--odd`), legend wraps, delta chips wrap.
+- [ ] Mobile: at ≤ 600 px hide every other X label (class `chart-x--odd`), legend wraps, delta chips stack one per row (§3b).
+- [ ] Stale state: `ULN_STALE_BADGE` renders the existing amber badge markup when the latest quarter is > 150 days old at build, else empty string (§3b).
 - Acceptance: `npm run build`, open `public/index.html` and `public/en/index.html` in a browser at
       360 px and 1140 px widths; chart legible, no horizontal scroll, no missing-token build error.
       `public/index.html` gzipped size growth ≤ 10 KB (`gzip -c public/index.html | wc -c` before/after).
