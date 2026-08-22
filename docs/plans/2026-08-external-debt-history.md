@@ -86,15 +86,83 @@ restate these strings — it references this table. Change wording here, nowhere
 | note | Termasuk SBN yang dipegang nonresiden · {edition} | Includes SBN held by non-residents · {edition_en} |
 | source link | Sumber → | Source → |
 | chart aria-label | Grafik garis posisi utang luar negeri pemerintah dan total nasional, 2014–{latest}, USD miliar | Line chart of government and total national external debt, 2014–{latest}, USD billion |
+| chart y-axis unit | USD miliar | USD billion |
 
-Visual defaults (the brief may override; then update here): chart `W=960`, `H=360` desktop; Y from 0;
-4–5 gridlines; yearly X labels, every other one hidden ≤ 600 px; last-point dot + mono value label;
-legend wraps under chart on mobile; delta chips **stack one per row** ≤ 600 px; stale state (latest
-quarter > 150 days old at build) reuses the existing amber badge next to the value date — no new style.
+Visual defaults (resolved against the handoff addendum — see `## Reconciliation`; addendum wins for
+structure/visuals): **two** inline SVGs, `.uln-chart-wide` (viewBox `0 0 1096 280`) and
+`.uln-chart-narrow` (viewBox `0 0 320 210`), both rendered at build time and swapped by a CSS media
+query at **660px** (`.uln-chart-wide{display:none}` / `.uln-chart-narrow{display:block}` below it) —
+no JS toggle, no label-hiding class. Y from 0, 4–5 gridlines (wide: 0/100/200/300/400/500; narrow:
+0/200/400 only); wide shows every year 2014–latest on the X axis, narrow shows every other year;
+last-point `<circle r="2.5">` + mono value label (bare number, e.g. `216,3`, not `USD 216,3 mi`) set
+left-of/above the dot; legend wraps under chart on mobile; `.chart-line--total` strokes
+`var(--dim-2)`, `.chart-line--government` strokes `var(--accent)`; delta chips use
+`grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))` in the existing 1px hairline-grid
+language, which collapses to one column on its own as the cell narrows; stale state (latest quarter
+> 150 days old at build) reuses the existing hero's amber badge markup/copy verbatim, at smaller
+inline padding, next to the value date — no new style or string.
 
 Generated (build output, never hand-edit; add to the CI `git add` list in `.github/workflows/build.yml`):
 `public/external-debt.json` — a copy of the series plus `generated_at`, for readers who want the raw
 numbers; referenced from the JSON-LD `Dataset.distribution` and the "Sumber data" list.
+
+## Reconciliation
+
+The design handoff was extended after this plan was written:
+`design_handoff_utangindonesia/README-addendum-uln.md` + `ULNCell.dc.html` +
+`Utang Luar Negeri - Artboards.dc.html` (states 1a–1d, screenshots 05–07). Its own "Copy —
+deviations from plan §3b" table was written without seeing §3b. Resolved below per this plan's
+stated precedence (addendum wins for structure/visuals; this plan wins for wording, data, code).
+Both documents have been edited to agree; nothing else in either changes.
+
+**Visual/structural — addendum wins (§3b and T2/T3 updated below):**
+1. Chart is **two** inline SVGs (`.uln-chart-wide` viewBox `0 0 1096 280`, `.uln-chart-narrow`
+   viewBox `0 0 320 210`), both always present in markup, toggled by a CSS media query at **660px**
+   — not one SVG at W=960/H=360 with JS-free responsive label-hiding. `renderLineChart()` (T2) must
+   support both size variants; there is no `chart-x--odd` class or ≤600px label-hiding logic.
+2. `.chart-line--total` strokes `var(--dim-2)` (`oklch(0.57 0.006 25)`), not `var(--neutral-bar)` —
+   the addendum found neutral-bar too dark to read as a line on `--surface`. `var(--neutral-bar)`
+   stays unused by this feature.
+3. Delta chips use `grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))` inside the
+   existing 1px-gap hairline grid language (same as `.card-grid`), which collapses to one column
+   fluidly around ~430px of cell width — not a fixed `≤600px` media-query stack.
+4. Chart height is **280** desktop / **210** mobile, not 360 — keeps the cell inside the rhythm of
+   the card rows above it (see addendum "Explore items" for rationale). §3b's "Visual defaults" row
+   is corrected accordingly.
+5. Section header meta reads `{{ULN_SECTION_COUNT}}` = `"2014–{latest year} · triwulanan"` — same
+   string §3b already specified; addendum's row (which had the clauses swapped) is corrected to
+   match in the table below, since ordering is wording (see next block), not structure.
+6. New row added to §3b (chart y-axis unit, not previously specified): `USD miliar` / `USD billion`.
+
+**Wording — this plan (§3b) wins; the addendum's copy table is corrected to match, not the reverse:**
+1. Card label for the **new section's** card stays **`Posisi utang luar negeri pemerintah,
+   triwulanan`** / `Government external debt position, quarterly` — not the shorter
+   `Utang luar negeri pemerintah`. That shorter string is already the label of the *existing*
+   Konteks card (`templates/index.id.html`, the D6 card immediately above this new section); reusing
+   it verbatim for the new section's card would put two identically-labelled cards back to back.
+2. Header meta clause order: `2014–{latest year} · triwulanan` (date range first), not
+   `triwulanan · 2014–{latest year}`.
+3. Legend stays `Pemerintah · Total nasional` / `Government · National total` — no inline gloss
+   (`— pemerintah + BI + swasta`). The breakdown is implicit in D1's two-series choice; a third
+   explanatory clause competes with the delta strip for attention.
+4. **Delta 3 stays `5 tahun` / `5 years`**, not `vs akhir 2014` — this is the important one.
+   T1's `changes()` defines `fiveYear` as a **rolling** comparison (the point exactly 20 quarters
+   before latest), not a fixed anchor to the series' first point. `vs akhir 2014` will read as
+   comparing to the dataset's start, which is a different (and, as the series grows past 2029,
+   increasingly wrong) claim than what `changes()` actually computes. Label must match the metric.
+5. Note stays `Termasuk SBN yang dipegang nonresiden · {edition}` / `Includes SBN held by
+   non-residents · {edition_en}` — drop the addendum's prepended `Posisi akhir triwulan.` The
+   quarter-end-position fact is already conveyed by `{{ULN_LATEST_DATE_HUMAN}}` next to the value.
+6. Chart `role="img" aria-label` uses §3b's exact template string (parameterized on `{latest}`),
+   not the addendum prototype's hardcoded 2026-specific Indonesian sentence baked into both artboard
+   SVGs — the real build must regenerate it per language and per latest quarter.
+
+**Not a conflict (confirmed, no change):** stale badge markup/copy reuses the existing hero's
+`{{STALE_DAYS}}`-driven string (`templates/index.id.html`'s `#stale-badge`) verbatim, just at the
+smaller inline padding the addendum specifies — §3b already said "reuses the existing amber badge
+markup," addendum just confirms the exact source. `.card`/`.card-grid`'s existing 1px hairline-grid
+CSS already matches the addendum's cell chrome one-for-one; T3's plan to reuse those classes for a
+single-cell section stands unchanged.
 
 ## 4. Tasks
 
@@ -118,27 +186,37 @@ pass. Commit message prefix per task is given. Check boxes as you go.
   makes the build exit 1.
 
 ### T2 — Chart generator (`feat(uln): build-time SVG line chart`)
-- [ ] Create `scripts/lib/chart.js` exporting `renderLineChart({ series, keys, width, height, lang })`
-      returning an SVG string. Requirements:
-      - `viewBox="0 0 W H"`, `width="100%"`, `preserveAspectRatio="xMidYMid meet"`; W=960, H=360.
-      - Y axis starts at **0** (no truncated axes on a debt site); nice-rounded ticks (4–5 gridlines),
-        labels in **USD bn** (`fmt` via `scripts/lib/format.js`, Indonesian decimal comma for `id`).
-      - X labels: one per year at the Q4 point, IBM Plex Mono via CSS class (no inline fonts).
-      - Two `<path>` lines with classes `chart-line--government` and `chart-line--total`; no fills;
-        `stroke-width` 2 / 1.5; `vector-effect="non-scaling-stroke"`.
-      - Last point of each series: a `<circle r="4">` plus a text label with the value.
-      - A `<title>` on the root SVG and `role="img" aria-label="…"` (bilingual text passed in).
-      - Output ≤ 8 KB for ~50 points: round coordinates to 1 dp, no whitespace padding.
-      - Colors come from CSS (`stroke: var(--accent)` / `var(--neutral-bar)`), **not** hardcoded in SVG.
-- [ ] `scripts/lib/chart.test.js`: scale math (0 maps to bottom, max maps to top padding), path starts
-      with `M`, exactly N points produce N−1 `L` segments, output under 8 KB on a 50-point synthetic
-      series, no `NaN` in output.
-- Acceptance: tests green; `node -e` snippet renders an SVG you can open in a browser.
+Per `## Reconciliation`, this renders **two** SVG variants (wide/narrow), not one.
+- [ ] Create `scripts/lib/chart.js` exporting `renderLineChart({ series, keys, variant, lang })`
+      returning an SVG string, `variant` one of `'wide' | 'narrow'`. Requirements:
+      - `viewBox="0 0 1096 280"` (wide) or `"0 0 320 210"` (narrow); `width="100%" height="auto"`;
+        no `preserveAspectRatio` override needed (matches the handoff artboards exactly).
+      - Y axis starts at **0** (no truncated axes on a debt site); gridlines + labels in **USD bn**:
+        wide 0/100/200/300/400/500 (6 labels, 5 hairlines + baseline), narrow 0/200/400 only
+        (`fmt` via `scripts/lib/format.js`, Indonesian decimal comma for `id`).
+      - X labels: wide shows every year 2014–latest; narrow shows every other year. IBM Plex Mono via
+        the existing `--font-mono` token set on the root `<svg>` (no inline `font-family` per text node).
+      - Two `<polyline>`s (not `<path>`) with classes `chart-line--government` (`stroke-width` 2) and
+        `chart-line--total` (`stroke-width` 1.5); `fill="none" stroke-linejoin="round"`; colors from
+        CSS (`var(--accent)` / `var(--dim-2)` — see Reconciliation item 2), never hardcoded in the SVG.
+      - Each polyline carries a `<title>` with its series name + latest value + date (the only hover
+        behavior; matches the handoff exactly).
+      - Last point of each series: `<circle r="2.5">` in the series color + a mono 11px bare-number
+        value label (`216,3`, not `USD 216,3 mi`), positioned left-of/above the dot
+        (`text-anchor="end"`) so it never clips the right edge.
+      - `role="img" aria-label="…"` on the root SVG using §3b's parameterized aria-label string
+        (bilingual text passed in) — not a hardcoded sentence.
+      - Output ≤ 8 KB total for both variants combined on ~50 points: round coordinates to 1 dp, no
+        whitespace padding.
+- [ ] `scripts/lib/chart.test.js`: scale math (0 maps to the baseline y, max maps to the top
+      gridline) for both variants, polyline point count is N for N series points, output under 8 KB
+      for both variants combined on a 50-point synthetic series, no `NaN` in output.
+- Acceptance: tests green; `node -e` snippet renders both variants as SVGs you can open in a browser.
 
 ### T3 — Section, tokens, CSS (`feat(uln): external debt history section`)
 If a design artboard exists for this cell (see `2026-08-external-debt-history.design-brief.md` and the
 handoff bundle), recreate it faithfully and it overrides the structure sketch below.
-- [ ] In `baseTokens()` add tokens: `ULN_CHART_SVG`, `ULN_LATEST_VALUE` (USD bn, formatted),
+- [ ] In `baseTokens()` add tokens: `ULN_CHART_SVG_WIDE`, `ULN_CHART_SVG_NARROW`, `ULN_LATEST_VALUE` (USD bn, formatted),
       `ULN_LATEST_DATE_HUMAN`, `ULN_QOQ_*`, `ULN_YOY_*`, `ULN_5Y_*` (value + sign + pct, each with
       `_EN` variants where wording differs), `ULN_EDITION`, `ULN_SOURCE_URL`, `ULN_TOTAL_VALUE`, `ULN_STALE_BADGE`, `ULN_SECTION_COUNT`,
       `ULN_DATA_URL` (`/external-debt.json`).
@@ -150,7 +228,8 @@ handoff bundle), recreate it faithfully and it overrides the structure sketch be
         <div class="card card--wide">
           <div class="card-label">{card label}</div>
           <div class="card-value">{{ULN_LATEST_VALUE}} <span class="card-date">{{ULN_LATEST_DATE_HUMAN}}</span> {{ULN_STALE_BADGE}}</div>
-          <div class="chart">{{ULN_CHART_SVG}}</div>
+          <div class="chart chart--wide">{{ULN_CHART_SVG_WIDE}}</div>
+          <div class="chart chart--narrow">{{ULN_CHART_SVG_NARROW}}</div>
           <div class="chart-legend">… two text swatches: {legend}</div>
           <div class="delta-row">… three .delta chips: {delta 1} / {delta 2} / {delta 3}</div>
           <div class="card-note">{note}</div>
@@ -159,17 +238,25 @@ handoff bundle), recreate it faithfully and it overrides the structure sketch be
       </section>
       ```
       All `{…}` strings come from the §3b table (ID and EN columns) — do not paraphrase them.
-- [ ] CSS in `public/style.css`, using existing tokens only: `.card--wide { grid-column: 1 / -1 }`
-      is NOT available (section isn't in a grid) — instead make `.section--uln .card` full width.
-      `.chart svg { display:block; width:100%; height:auto }`, `.chart-line--government { stroke: var(--accent) }`,
-      `.chart-line--total { stroke: var(--neutral-bar) }`, gridlines `stroke: var(--line-soft)`, axis
-      text `font-family: var(--font-mono); font-size: 11px; fill: var(--dim)`, `.delta` chips reuse
-      `.chip` visual language (mono, 13px); delta numbers in `var(--text)`, labels in `var(--dim)` — **never**
-      red/green for up/down (credible, not alarmist). **No new colours.** Respect `prefers-reduced-motion` (there is no motion —
-      keep it that way).
+- [ ] CSS in `public/style.css`, using existing tokens only: reuse `.card-grid`/`.card`'s existing
+      1px hairline-grid language for the single-cell section (`grid-template-columns: 1fr`) — this
+      already matches the handoff's cell chrome one-for-one, no new full-width override needed.
+      `.chart svg { display:block; width:100%; height:auto }`,
+      `.chart-line--government { stroke: var(--accent) }`, `.chart-line--total { stroke: var(--dim-2) }`
+      (see Reconciliation item 2 — not `--neutral-bar`), gridlines `stroke: var(--line-soft)`,
+      baseline `stroke: var(--line-strong)`, axis text `font-family: var(--font-mono); font-size: 11px;
+      fill: var(--dim)`. `.chart--narrow { display: none }` by default, `.chart--wide { display: none }`
+      / `.chart--narrow { display: block }` below **660px** (Reconciliation item 1) — the same
+      breakpoint the card grids fall to one column. Delta chips: `grid-template-columns:
+      repeat(auto-fit, minmax(200px, 1fr))` in the 1px hairline-grid language (Reconciliation item 3);
+      delta numbers in `var(--text)`, labels in `var(--muted)` — **never** red/green for up/down
+      (credible, not alarmist). **No new colours.** Respect `prefers-reduced-motion` (there is no
+      motion — keep it that way).
 - [ ] Remove `external_debt_usd` from `data/debt.json`; make `CARD_ULN_VALUE/NOTE/SOURCE` derive
       from the new series (D6). Keep the card's wording.
-- [ ] Mobile: at ≤ 600 px hide every other X label (class `chart-x--odd`), legend wraps, delta chips stack one per row (§3b).
+- [ ] Mobile: below 660px the narrow SVG variant takes over (see CSS bullet above — this replaces
+      any X-label-hiding logic), legend wraps, delta chips collapse to one per row via the auto-fit
+      grid on its own (§3b, Reconciliation item 3).
 - [ ] Stale state: `ULN_STALE_BADGE` renders the existing amber badge markup when the latest quarter is > 150 days old at build, else empty string (§3b).
 - Acceptance: `npm run build`, open `public/index.html` and `public/en/index.html` in a browser at
       360 px and 1140 px widths; chart legible, no horizontal scroll, no missing-token build error.
