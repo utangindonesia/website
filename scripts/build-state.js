@@ -20,6 +20,7 @@ import {
 import { fmtId, fmtId1dp, fmt1dp, groupsToHtml, formatTriliunIdr, formatUsdBillions, humanDate } from './lib/format.js';
 import { validateExternalSeries, latestPoint, changes } from './lib/external-debt.js';
 import { renderLineChart } from './lib/chart.js';
+import { buildAssets } from './build-assets.js';
 import { SITE_ORIGIN, GITHUB_REPO_URL, CF_BEACON_TOKEN } from './site-config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -135,6 +136,12 @@ const state = {
 mkdirSync(path.join(ROOT, 'public'), { recursive: true });
 mkdirSync(path.join(ROOT, 'public/en'), { recursive: true });
 writeFileSync(path.join(ROOT, 'public/state.json'), JSON.stringify(state));
+
+// --- minified, content-hashed CSS/JS ----------------------------------------
+// Runs once here, not inside baseTokens() (which runs twice, once per
+// language) -- see docs/plans (Claude Code plan mode) "content-hashed +
+// minified CSS/JS" §4.
+const assets = buildAssets(ROOT);
 
 // --- public/external-debt.json ----------------------------------------------
 writeFileSync(
@@ -370,6 +377,9 @@ function baseTokens(lang) {
     SRC_PROFIL_UTANG: data.sources_general.profil_utang,
     SRC_SULNI: data.sources_general.sulni,
     SRC_BPS: data.sources_general.bps,
+
+    ASSET_CSS_URL: `/${assets.cssName}`,
+    ASSET_JS_URL: `/${assets.appName}`,
 
     GITHUB_REPO_URL,
     CF_ANALYTICS_SNIPPET: CF_BEACON_TOKEN
