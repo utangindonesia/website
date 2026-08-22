@@ -18,11 +18,15 @@ browser JS (`<script type="module">`), zero npm packages.
 ## Architecture
 
 **Source vs. generated files — do not hand-edit generated output.** `scripts/build-state.js` reads
-`data/debt.json` + `templates/index.{id,en}.html` and writes `public/index.html`,
-`public/en/index.html`, `public/state.json`, `public/sitemap.xml`, and `public/robots.txt`. Those
-five files are build output; edits to them are silently overwritten on the next `npm run build`.
-The only files a human (or Claude) should edit directly are `data/debt.json`, `templates/*.html`,
-`public/style.css`, `public/app.js`, `public/counter.js`, and the `scripts/**` build logic itself.
+`data/debt.json` + `data/external-debt.json` + `templates/index.{id,en}.html` and writes
+`public/index.html`, `public/en/index.html`, `public/state.json`, `public/external-debt.json`,
+`public/sitemap.xml`, and `public/robots.txt`. Those six files are build output; edits to them are
+silently overwritten on the next `npm run build`. The only files a human (or Claude) should edit
+directly are `data/debt.json`, `data/external-debt.json`, `templates/*.html`, `public/style.css`,
+`public/app.js`, `public/counter.js`, and the `scripts/**` build logic itself (including
+`scripts/lib/external-debt.js` and `scripts/lib/chart.js`, which validate and render the "Utang
+luar negeri" quarterly chart — see `docs/plans/2026-08-external-debt-history.md` for the full
+design/data rationale).
 
 **Template rendering** is a single `render()` function in `build-state.js` doing `{{TOKEN}}` string
 substitution (see `baseTokens()` for the full token map) — no templating library. Adding a new

@@ -10,14 +10,19 @@ for how the numbers are derived.
 
 ## How it works
 
-- **`data/debt.json`** is the only file a human edits. It holds the last few quarters of official
-  central government debt positions plus the other indicator figures (population, GDP, interest
-  ceiling, external debt, FX reserves, …), each with the `source_url` it came from.
-- **`scripts/build-state.js`** (plain Node, no dependencies) reads `data/debt.json` and:
+- **`data/debt.json`** and **`data/external-debt.json`** are the only files a human edits.
+  `debt.json` holds the last few quarters of official central government debt positions plus the
+  other single-value indicator figures (population, GDP, interest ceiling, FX reserves, …), each
+  with the `source_url` it came from. `external-debt.json` holds the quarterly external-debt (ULN)
+  time series behind the "Utang luar negeri" chart, sourced from Bank Indonesia's SULNI.
+- **`scripts/build-state.js`** (plain Node, no dependencies) reads both data files and:
   - computes a per-second growth rate from the average of the last 2–3 quarterly deltas,
   - runs sanity checks (rate can't be negative or absurdly large, dates must be increasing) and
     **fails the build** (non-zero exit) if any of them trip,
   - writes `public/state.json` — the small file the browser fetches on load to drive the ticker,
+  - validates `external-debt.json` and renders the two build-time SVG line charts
+    (`scripts/lib/chart.js`) for the "Utang luar negeri" section — no client-side JS involved,
+  - writes `public/external-debt.json` — a copy of the ULN series for anyone who wants the raw numbers,
   - renders `public/index.html` and `public/en/index.html` from `templates/*.html`, baking in the
     current title/meta description, JSON-LD, and the *exact last official figure* as a static
     fallback (so the page is correct even if JavaScript never runs),
@@ -37,11 +42,16 @@ Kemenkeu has reported the central government debt position quarterly (not monthl
 updated Bank Indonesia SULNI/SEKI or BPS figure):
 
 1. Append the new quarterly figure to `debt_series` in `data/debt.json`, with its `source_url`.
-2. Update whichever of the single-value fields changed (interest YTD, deficit YTD, external debt,
-   FX reserves, etc.), each with its own `source_url`.
-3. `npm test && npm run build` locally to sanity-check before pushing (optional — CI does this too).
-4. Push to `main`. The Action rebuilds `public/state.json` and both HTML pages and commits them;
-   Cloudflare Pages deploys the new commit within a minute or two.
+2. Update whichever of the single-value fields changed (interest YTD, deficit YTD, FX reserves,
+   etc.), each with its own `source_url`.
+3. Each quarter, once Bank Indonesia publishes the SULNI edition two months after quarter-end (e.g.
+   the November edition carries the September position), add one row to `series` in
+   `data/external-debt.json` from that edition's Table I.1 ("External Debt Position by Group of
+   Borrower") — `government`/`central_bank`/`private`/`total`, USD millions. Update `edition` /
+   `edition_en` / `source_url` to the new edition.
+4. `npm test && npm run build` locally to sanity-check before pushing (optional — CI does this too).
+5. Push to `main`. The Action rebuilds `public/state.json`, `public/external-debt.json`, and both
+   HTML pages and commits them; Cloudflare Pages deploys the new commit within a minute or two.
 
 That's the entire update — no other files should need to change for a routine quarterly refresh.
 
@@ -124,14 +134,15 @@ dashboard, copy its beacon token, and set it as a `CF_BEACON_TOKEN` repository v
 
 Central government debt only — Surat Berharga Negara (SBN) and loans, rupiah and foreign currency.
 Excludes state-owned enterprise debt, regional government debt, and contingent liabilities. No PDF
-scraping (data is hand-entered quarterly from official releases — see "Quarterly update procedure"),
-no historical charts, no accounts, no comments, no runtime backend.
+scraping (data is hand-entered quarterly from official releases — see "Quarterly update procedure").
+One historical chart (quarterly external debt since 2014, build-time SVG, no JS chart library) — no
+other historical series, no accounts, no comments, no runtime backend.
 
 ## License
 
 MIT, see [LICENSE](LICENSE). Data sourced from Kementerian Keuangan (Kemenkeu), Bank Indonesia,
-and BPS — see the site's Methodology section for exact source links, and `data/debt.json` for the
-`source_url` behind every figure.
+and BPS — see the site's Methodology section for exact source links, and `data/debt.json` /
+`data/external-debt.json` for the `source_url` behind every figure.
 
 ## Contact
 

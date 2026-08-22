@@ -299,20 +299,26 @@ handoff bundle), recreate it faithfully and it overrides the structure sketch be
       handoff's 100 KB page-weight budget.
 
 ### T4 — Export, SEO, methodology (`feat(uln): dataset export + methodology`)
-- [ ] Write `public/external-debt.json` from `build-state.js`; add it to the CI `git add` list.
-- [ ] JSON-LD: add a second `Dataset` node (name "Utang Luar Negeri Indonesia" / "Indonesia External
+- [x] Write `public/external-debt.json` from `build-state.js`; add it to the CI `git add` list.
+- [x] JSON-LD: add a second `Dataset` node (name "Utang Luar Negeri Indonesia" / "Indonesia External
       Debt", `temporalCoverage` "2014-03-31/<latest>", `distribution` → `/external-debt.json`,
-      `creator` unchanged, cite Bank Indonesia in `description`).
-- [ ] Add one paragraph to the Methodology prose in both templates explaining: ULN is in USD because
+      `creator` unchanged, cite Bank Indonesia in `description`). Actual `temporalCoverage` is
+      `2014-12-31/<latest>` — matches the real series start per the T1 data-coverage note, not the
+      plan's `2014-03-31` placeholder.
+- [x] Add one paragraph to the Methodology prose in both templates explaining: ULN is in USD because
       that is how BI reports it; it is a different measure from the rupiah headline (includes
       non-resident SBN, excludes domestic-held debt); quarterly points from monthly SULNI editions.
-- [ ] Add `/external-debt.json` link to the "Sumber data" list and keep the existing SULNI link.
-- [ ] Update `README.md` (data update procedure: "each quarter, add one row to
+- [x] Add `/external-debt.json` link to the "Sumber data" list and keep the existing SULNI link.
+- [x] Update `README.md` (data update procedure: "each quarter, add one row to
       `data/external-debt.json` from the SULNI edition two months after quarter-end") and `CLAUDE.md`
       (new source files list: `data/external-debt.json`, `scripts/lib/external-debt.js`,
-      `scripts/lib/chart.js`; new generated file `public/external-debt.json`).
-- Acceptance: JSON-LD validates (paste into https://validator.schema.org/ or check with
-      `node -e "JSON.parse(...)"`), `git status` shows only intended files.
+      `scripts/lib/chart.js`; new generated file `public/external-debt.json`). Also fixed a now-false
+      README claim ("no historical charts" under Scope & non-goals) and the stale "external debt"
+      mention in the quarterly-update bullet list, both direct consequences of this feature landing.
+- Acceptance: JSON-LD parsed and inspected with `node -e "JSON.parse(...)"` — both `Dataset` nodes
+      present, second one's `variableMeasured`/`distribution`/`temporalCoverage` correct. `git status`
+      after build showed only the expected modified/new files. Rebuilt twice: identical output except
+      `generated_at` in both `public/state.json` and `public/external-debt.json`.
 
 ### T5 — Verification pass (`chore(uln): verify`) — no code unless something is broken
 - [ ] `npm test`, `npm run build` twice (second run must produce no diff except `generated_at`).

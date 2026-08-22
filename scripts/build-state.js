@@ -135,6 +135,12 @@ mkdirSync(path.join(ROOT, 'public'), { recursive: true });
 mkdirSync(path.join(ROOT, 'public/en'), { recursive: true });
 writeFileSync(path.join(ROOT, 'public/state.json'), JSON.stringify(state));
 
+// --- public/external-debt.json ----------------------------------------------
+writeFileSync(
+  path.join(ROOT, 'public/external-debt.json'),
+  JSON.stringify({ ...externalDebt, generated_at: new Date(now).toISOString() }),
+);
+
 // --- shared display tokens ---------------------------------------------------
 const staleDaysAtBuild = staleDays(officialDate, now);
 const staleAtBuild = isStale(officialDate, now);
@@ -198,6 +204,21 @@ function jsonLd(lang) {
       variableMeasured: [
         { '@type': 'PropertyValue', name: 'Central government debt', value: state.baseline, unitText: 'IDR' },
         { '@type': 'PropertyValue', name: 'Debt-to-GDP ratio', value: debtToGdp, unitText: '%' },
+      ],
+    },
+    {
+      '@type': 'Dataset',
+      name: isId ? 'Utang Luar Negeri Indonesia' : 'Indonesia External Debt',
+      description: isId
+        ? 'Posisi utang luar negeri Indonesia menurut kelompok peminjam (pemerintah, bank sentral, swasta), triwulanan, dari Bank Indonesia (SULNI). Utang pemerintah termasuk SBN yang dipegang nonresiden.'
+        : "Indonesia's external debt position by group of borrower (government, central bank, private), quarterly, from Bank Indonesia (SULNI). Government debt includes SBN held by non-residents.",
+      url: isId ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}/en/`,
+      temporalCoverage: `${ulnSeries[0].date}/${ulnLatest.date}`,
+      creator: { '@type': 'Organization', name: 'utangindonesia.org' },
+      distribution: [{ '@type': 'DataDownload', encodingFormat: 'application/json', contentUrl: `${SITE_ORIGIN}/external-debt.json` }],
+      variableMeasured: [
+        { '@type': 'PropertyValue', name: 'Government external debt', value: ulnLatest.government, unitText: 'USD million' },
+        { '@type': 'PropertyValue', name: 'Total national external debt', value: ulnLatest.total, unitText: 'USD million' },
       ],
     },
     {
