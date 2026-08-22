@@ -39,7 +39,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/state.json public/external-debt.json public/index.html public/en/index.html public/sitemap.xml public/robots.txt
+          # -A (not an explicit file list, not a glob) because the hashed CSS/JS
+          # filenames change on every content edit -- only -A stages the
+          # deletion of a previous build's stale hashed file along with the
+          # new one's addition. Safe: .gitignore already covers everything
+          # transient (.DS_Store, *.log, node_modules/) that could land here.
+          git add -A public
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else

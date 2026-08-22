@@ -26,14 +26,20 @@ for how the numbers are derived.
   - renders `public/index.html` and `public/en/index.html` from `templates/*.html`, baking in the
     current title/meta description, JSON-LD, and the *exact last official figure* as a static
     fallback (so the page is correct even if JavaScript never runs),
-  - writes `public/sitemap.xml` and `public/robots.txt`.
-- **`public/counter.js`** is the only client-side logic: on load it fetches `state.json` and
+  - writes `public/sitemap.xml` and `public/robots.txt`,
+  - renders `templates/404.html` to `public/404.html`,
+  - minifies and content-hashes `assets/{style.css,app.js,counter.js}` into `public/` (e.g.
+    `style.a1b2c3d4e5.css`) and writes a generated `public/_headers` naming them so Cloudflare Pages
+    caches them forever — the filename changes whenever the content does, so this is safe.
+- **`assets/counter.js`** is the only client-side logic: on load it fetches `state.json` and
   advances the counter with `baseline + elapsed_seconds × rate`. Large rupiah totals are carried
   as `BigInt` end-to-end (see "Precision" below) — the small rate/elapsed pieces stay as ordinary
   numbers, which is safe because they never get large enough to lose precision.
 - A GitHub Action (`.github/workflows/build.yml`) runs `build-state.js` on every push to `main`
-  and weekly on a schedule, and commits the regenerated `public/*` output back to the repo.
-  Cloudflare Pages watches the repo and deploys automatically — there is no separate deploy step.
+  and weekly on a schedule, and commits the regenerated `public/*` output back to the repo (`git add -A`,
+  since the hashed asset filenames — and therefore which files need adding vs. deleting — change on
+  every content edit). Cloudflare Pages watches the repo and deploys automatically — there is no
+  separate deploy step.
 
 ### Quarterly update procedure
 
@@ -62,7 +68,7 @@ Indonesia's debt (~Rp 8.6 quadrillion) is close to `Number.MAX_SAFE_INTEGER` (2^
 `data/debt.json`'s `debt_idr`/`gdp_idr` fields, `state.json`'s `baseline`, the browser's running
 total — carries it as a `BigInt` (JSON fields as digit strings, parsed with `BigInt(str)`, never
 `Number(str)`). Only small, safely-sized quantities (the per-second rate, elapsed seconds,
-percentages) ever touch floating point. See `scripts/lib/debt-math.js` and `public/counter.js`,
+percentages) ever touch floating point. See `scripts/lib/debt-math.js` and `assets/counter.js`,
 and their `*.test.js` files, which include a test proving no precision loss at 1×10^16 scale.
 
 ### Staleness
@@ -79,12 +85,16 @@ reliably if a release is overdue.
 
 ```
 npm test           # node:test — pure-function unit tests, no browser needed
-npm run build       # regenerates public/state.json, public/index.html, public/en/index.html, etc.
+npm run build       # regenerates public/state.json, public/index.html, public/en/index.html,
+                     # public/404.html, public/_headers, and the hashed assets/* -> public/* files
 python3 -m http.server 8080 --directory public   # or any static file server, to preview
 ```
 
-There is no bundler and no build step for `public/*.js` — they're loaded directly as ES modules
-(`<script type="module">`), which every evergreen browser supports natively.
+There's still no bundler. `assets/*.js` ship as ES modules (`<script type="module">`) exactly as
+authored — the build only strips comments/indentation (`scripts/lib/minify.js`, hand-rolled, no npm
+dependency) and adds a content hash to the filename; no transpiling, no mangling, no module-graph
+rewriting beyond rewriting the one `./counter.js` import specifier in `app.js` to point at its hashed
+sibling.
 
 ## Deploy your own
 
@@ -113,6 +123,9 @@ as a live standby:
 3. If the primary domain (`utangindonesia.org`) is ever blocked, repoint `hutangindonesia.org` (or
    any domain you control) at the GitHub Pages mirror instead of its usual 301 redirect to
    primary, and set `SITE_ORIGIN` accordingly for a rebuild.
+
+GitHub Pages ignores `public/_headers` entirely, so the mirror falls back to its own default caching
+— hashed asset filenames still work correctly there, just without the year-long Cache-Control.
 
 ### DDoS / blocking resilience
 
