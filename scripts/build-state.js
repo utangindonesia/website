@@ -397,9 +397,14 @@ function render(template, tokens) {
 
 const idTemplate = readFileSync(path.join(ROOT, 'templates/index.id.html'), 'utf8');
 const enTemplate = readFileSync(path.join(ROOT, 'templates/index.en.html'), 'utf8');
+const notFoundTemplate = readFileSync(path.join(ROOT, 'templates/404.html'), 'utf8');
 
 writeFileSync(path.join(ROOT, 'public/index.html'), render(idTemplate, baseTokens('id')));
 writeFileSync(path.join(ROOT, 'public/en/index.html'), render(enTemplate, baseTokens('en')));
+// render() only throws on a template token *missing* from the map, never the
+// reverse, so passing the full 'id' token map here (rather than a hand-built
+// subset) is safe and means any future token added to 404.html just works.
+writeFileSync(path.join(ROOT, 'public/404.html'), render(notFoundTemplate, baseTokens('id')));
 
 // --- sitemap.xml + robots.txt ----------------------------------------------
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -422,6 +427,59 @@ writeFileSync(path.join(ROOT, 'public/sitemap.xml'), sitemap);
 
 const robots = `User-agent: *\nAllow: /\nSitemap: ${SITE_ORIGIN}/sitemap.xml\n`;
 writeFileSync(path.join(ROOT, 'public/robots.txt'), robots);
+
+// --- public/_headers ---------------------------------------------------
+// Cloudflare Pages reads this natively for per-path Cache-Control rules. The
+// hashed assets are named by content hash, so it's correct for them to be
+// cached forever (immutable); everything else must always revalidate (HTML,
+// state.json) or is short-lived (sitemap/robots) or barely ever changes
+// (the hand-maintained icons/og-image, deliberately not content-hashed).
+// No `/*` catch-all: Cloudflare Pages applies every matching rule, so a
+// catch-all plus a specific rule would emit two conflicting Cache-Control
+// values on one response. GitHub Pages (the standby mirror) ignores this
+// file entirely and falls back to its own defaults — harmless, since hashed
+// filenames still work correctly there, just without the long TTL.
+const headersFile = `
+/${assets.cssName}
+  Cache-Control: public, max-age=31536000, immutable
+/${assets.appName}
+  Cache-Control: public, max-age=31536000, immutable
+/${assets.counterName}
+  Cache-Control: public, max-age=31536000, immutable
+
+/state.json
+  Cache-Control: public, max-age=60, must-revalidate
+/external-debt.json
+  Cache-Control: public, max-age=60, must-revalidate
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+/en/
+  Cache-Control: public, max-age=0, must-revalidate
+/en/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+/404.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+/robots.txt
+  Cache-Control: public, max-age=3600
+
+/og-image.png
+  Cache-Control: public, max-age=86400
+/apple-touch-icon.png
+  Cache-Control: public, max-age=86400
+/favicon.svg
+  Cache-Control: public, max-age=86400
+/favicon-32.png
+  Cache-Control: public, max-age=86400
+/favicon-16.png
+  Cache-Control: public, max-age=86400
+`.trimStart();
+writeFileSync(path.join(ROOT, 'public/_headers'), headersFile);
 
 console.log(`[build-state] OK — baseline ${state.baseline} @ ${officialDate}, rate ${ratePerSec.toFixed(2)} IDR/sec, generated_at ${state.generated_at}`);
 if (staleAtBuild) console.log(`[build-state] stale badge WILL show at build time (${staleDaysAtBuild} days old)`);
