@@ -1,5 +1,7 @@
 .DS_Store
 node_modules/
 *.log
-.claude/
+.claude/*
+!.claude/skills/
+!.claude/settings.json
 design_handoff_utangindonesia/
