@@ -5,6 +5,7 @@
 
 const ID_FORMATTER = new Intl.NumberFormat('id-ID');
 const ID_FORMATTER_1DP = new Intl.NumberFormat('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const EN_FORMATTER_1DP = new Intl.NumberFormat('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
 const MONTHS_ID = [
   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
@@ -23,6 +24,16 @@ export function fmtId(value) {
 /** One decimal place, id-ID comma decimal separator, e.g. 39.4 -> "39,4" */
 export function fmtId1dp(value) {
   return ID_FORMATTER_1DP.format(value);
+}
+
+/** One decimal place, en-US period decimal separator, e.g. 39.4 -> "39.4" */
+export function fmtEn1dp(value) {
+  return EN_FORMATTER_1DP.format(value);
+}
+
+/** @param {number} value @param {'id'|'en'} lang one decimal place, locale-appropriate separator */
+export function fmt1dp(value, lang) {
+  return lang === 'en' ? fmtEn1dp(value) : fmtId1dp(value);
 }
 
 /**

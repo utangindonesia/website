@@ -200,18 +200,26 @@ pass. Commit message prefix per task is given. Check boxes as you go.
 
 ### T2 — Chart generator (`feat(uln): build-time SVG line chart`)
 Per `## Reconciliation`, this renders **two** SVG variants (wide/narrow), not one.
-- [ ] Create `scripts/lib/chart.js` exporting `renderLineChart({ series, keys, variant, lang })`
+- [x] Create `scripts/lib/chart.js` exporting `renderLineChart({ series, keys, variant, lang })`
       returning an SVG string, `variant` one of `'wide' | 'narrow'`. Requirements:
       - `viewBox="0 0 1096 280"` (wide) or `"0 0 320 210"` (narrow); `width="100%" height="auto"`;
         no `preserveAspectRatio` override needed (matches the handoff artboards exactly).
       - Y axis starts at **0** (no truncated axes on a debt site); gridlines + labels in **USD bn**:
         wide 0/100/200/300/400/500 (6 labels, 5 hairlines + baseline), narrow 0/200/400 only
         (`fmt` via `scripts/lib/format.js`, Indonesian decimal comma for `id`).
-      - X labels: wide shows every year 2014–latest; narrow shows every other year. IBM Plex Mono via
+      - X labels: wide shows every year 2014–latest, narrow shows every other year — **and then**,
+        regardless of variant, any label whose text extent (computed from its anchor: `start` grows
+        right, `end` grows left, `middle` grows both ways) would overlap the previously-kept label is
+        dropped, always keeping the first and last. This matters because this edition's series starts
+        with a single Q4-2014 point one quarter before 2015 begins, so "2014" and "2015" collide at
+        wide's normal spacing — verified visually and by test (see chart.test.js). IBM Plex Mono via
         the existing `--font-mono` token set on the root `<svg>` (no inline `font-family` per text node).
       - Two `<polyline>`s (not `<path>`) with classes `chart-line--government` (`stroke-width` 2) and
-        `chart-line--total` (`stroke-width` 1.5); `fill="none" stroke-linejoin="round"`; colors from
-        CSS (`var(--accent)` / `var(--dim-2)` — see Reconciliation item 2), never hardcoded in the SVG.
+        `chart-line--total` (`stroke-width` 1.5); `fill="none" stroke="currentColor"`; line/dot color
+        from CSS via `color` + `currentColor` (`.chart-line--government{color:var(--accent)}` etc. —
+        see Reconciliation item 2 for `--dim-2}` on total), never hardcoded in the SVG. A separate
+        `labelClassName` per key drives the last-point value label's color, distinct from the line
+        per the handoff's token list (`--accent-hover` / `--text-answer`, not `--accent` / `--dim-2`).
       - Each polyline carries a `<title>` with its series name + latest value + date (the only hover
         behavior; matches the handoff exactly).
       - Last point of each series: `<circle r="2.5">` in the series color + a mono 11px bare-number
@@ -220,11 +228,14 @@ Per `## Reconciliation`, this renders **two** SVG variants (wide/narrow), not on
       - `role="img" aria-label="…"` on the root SVG using §3b's parameterized aria-label string
         (bilingual text passed in) — not a hardcoded sentence.
       - Output ≤ 8 KB total for both variants combined on ~50 points: round coordinates to 1 dp, no
-        whitespace padding.
-- [ ] `scripts/lib/chart.test.js`: scale math (0 maps to the baseline y, max maps to the top
+        whitespace padding. (Real 47-point data: ~6.5 KB combined.)
+- [x] `scripts/lib/chart.test.js`: scale math (0 maps to the baseline y, max maps to the top
       gridline) for both variants, polyline point count is N for N series points, output under 8 KB
-      for both variants combined on a 50-point synthetic series, no `NaN` in output.
+      for both variants combined on a 50-point synthetic series, no `NaN` in output. Also covers the
+      label-collision fallback above and narrow's every-other-year rule.
 - Acceptance: tests green; `node -e` snippet renders both variants as SVGs you can open in a browser.
+  Verified in Chrome against the real `data/external-debt.json` at both viewBox sizes — matches the
+  handoff's curve shape (2020 dip, 2022 dip) and last-point labels (216,3 / 453,4).
 
 ### T3 — Section, tokens, CSS (`feat(uln): external debt history section`)
 If a design artboard exists for this cell (see `2026-08-external-debt-history.design-brief.md` and the
