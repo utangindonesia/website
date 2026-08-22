@@ -1,7 +1,9 @@
 # Plan: External debt (ULN) history + chart
 
-**Status:** ready to execute · **Owner decision needed:** see §2 · **Target executor:** a cost-efficient
-model following `.claude/skills/execute-plan/SKILL.md` (invoke `/execute-plan docs/plans/2026-08-external-debt-history.md`).
+**Status:** ready to execute · **Owner decision needed:** see §2
+**Models:** planned on Fable 5 · **execute on Sonnet 5** (`/model sonnet`, then
+`/execute-plan docs/plans/2026-08-external-debt-history.md`) · design session on Opus 5 · escalate T1 data
+transcription problems and any `## Blockers` back to the planning model, not to more Sonnet retries.
 
 Read `CLAUDE.md` first. Everything in it applies (generated files, BigInt rule, domain-agnostic,
 anonymity, sanity checks, design fidelity). This plan only adds to it.

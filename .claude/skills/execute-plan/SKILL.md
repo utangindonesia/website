@@ -9,6 +9,14 @@ You are executing a plan that a stronger model (or the owner) already wrote. You
 verified execution — not re-planning. Argument: the plan path (default: the newest file in
 `docs/plans/`).
 
+## Model
+
+Plans are executed on **Sonnet 5** unless the plan's header says otherwise. A skill cannot switch
+the session model — the user selects it with `/model` before invoking this skill. On start, check
+which model you are: Sonnet- or Opus-tier → proceed; Haiku → stop and ask the user to switch.
+Never spawn subagents on a stronger model to work around a hard task — that is what `## Blockers`
+and escalation to the planning model are for.
+
 ## Procedure
 
 1. Read `CLAUDE.md`, then the whole plan. Restate in 3–5 lines: goal, non-goals, the decisions
@@ -51,6 +59,7 @@ verified execution — not re-planning. Argument: the plan path (default: the ne
 ## Writing a new plan (for the planning model)
 
 Plans live in `docs/plans/YYYY-MM-<slug>.md` and follow the structure of the existing ones:
+header with **Status · Models** (which model planned it, which executes it, where to escalate) ·
 Goal · Decisions table with defaults · Data model · Numbered tasks with checkboxes, commit prefix
 and acceptance criteria · "Things a cheaper model gets wrong" · Definition of done. Every task must
 be completable without judgement calls the plan didn't already make.

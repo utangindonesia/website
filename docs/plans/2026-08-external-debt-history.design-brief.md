@@ -1,7 +1,7 @@
 # Design Brief — External debt (ULN) history cell (for Claude Design)
 
 Addendum to `design_handoff_utangindonesia/design-brief.md`. Same site, same tone, one new element.
-Run on an Opus-tier model; short session. Export via Handoff to Claude Code into the existing bundle.
+Run on **Opus 5** (Opus-tier), as the original brief did; short session. Implementation afterwards is on Sonnet 5 via the plan. Export via Handoff to Claude Code into the existing bundle.
 
 ## Context
 utangindonesia.org is a single dark page: hero debt counter → "Utang" card grid (6) → "Konteks" card
