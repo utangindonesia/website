@@ -208,6 +208,7 @@ function jsonLd(lang) {
       url: isId ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}/en/`,
       temporalCoverage: officialDate,
       creator: { '@type': 'Organization', name: 'utangindonesia.org' },
+      license: 'https://creativecommons.org/licenses/by/4.0/',
       distribution: [{ '@type': 'DataDownload', encodingFormat: 'application/json', contentUrl: `${SITE_ORIGIN}/state.json` }],
       variableMeasured: [
         { '@type': 'PropertyValue', name: 'Central government debt', value: state.baseline, unitText: 'IDR' },
@@ -223,6 +224,7 @@ function jsonLd(lang) {
       url: isId ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}/en/`,
       temporalCoverage: `${ulnSeries[0].date}/${ulnLatest.date}`,
       creator: { '@type': 'Organization', name: 'utangindonesia.org' },
+      license: 'https://creativecommons.org/licenses/by/4.0/',
       distribution: [{ '@type': 'DataDownload', encodingFormat: 'application/json', contentUrl: `${SITE_ORIGIN}/external-debt.json` }],
       variableMeasured: [
         { '@type': 'PropertyValue', name: 'Government external debt', value: ulnLatest.government, unitText: 'USD million' },
@@ -385,6 +387,12 @@ function baseTokens(lang) {
     CF_ANALYTICS_SNIPPET: CF_BEACON_TOKEN
       ? `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "${CF_BEACON_TOKEN}"}'></script>`
       : '',
+    PRIVACY_ANALYTICS_SENTENCE: CF_BEACON_TOKEN
+      ? ' Jumlah kunjungan dihitung dengan Cloudflare Web Analytics, yang bekerja tanpa kuki dan tanpa mengidentifikasi pengunjung.'
+      : '',
+    PRIVACY_ANALYTICS_SENTENCE_EN: CF_BEACON_TOKEN
+      ? ' Page views are counted with Cloudflare Web Analytics, which uses no cookies and does not identify visitors.'
+      : '',
   };
 }
 
@@ -433,7 +441,10 @@ writeFileSync(path.join(ROOT, 'public/robots.txt'), robots);
 // hashed assets are named by content hash, so it's correct for them to be
 // cached forever (immutable); everything else must always revalidate (HTML,
 // state.json) or is short-lived (sitemap/robots) or barely ever changes
-// (the hand-maintained icons/og-image, deliberately not content-hashed).
+// (the hand-maintained icons/og-image, deliberately not content-hashed). The
+// self-hosted fonts under /fonts/ are also un-hashed but change essentially
+// never (replacing one means renaming it), so they get the same immutable
+// treatment as the icons, just with the longer TTL of the hashed assets.
 // No `/*` catch-all: Cloudflare Pages applies every matching rule, so a
 // catch-all plus a specific rule would emit two conflicting Cache-Control
 // values on one response. GitHub Pages (the standby mirror) ignores this
@@ -445,6 +456,9 @@ const headersFile = `
 /${assets.appName}
   Cache-Control: public, max-age=31536000, immutable
 /${assets.counterName}
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
 /state.json

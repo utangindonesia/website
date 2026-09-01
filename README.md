@@ -140,12 +140,18 @@ GitHub Pages ignores `public/_headers` entirely, so the mirror falls back to its
   is relative and the only domain reference (`SITE_ORIGIN`) is a single build-time constant, a
   fork or mirror works without touching any code.
 
-## Analytics
+## Analytics & privacy
+
+IBM Plex Sans/Mono are self-hosted from `public/fonts/` (SIL OFL, see `public/fonts/OFL.txt`) rather
+than loaded from Google Fonts, so the page makes no request to any third party.
 
 The site ships with [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/) wired
 in but off by default (no tracking without a token). To enable it, create a site in the Cloudflare
 dashboard, copy its beacon token, and set it as a `CF_BEACON_TOKEN` repository variable/secret —
-`scripts/site-config.js` picks it up at build time and `build-state.js` injects the snippet.
+`scripts/site-config.js` picks it up at build time, `build-state.js` injects the analytics snippet,
+and the same variable switches on the disclosure sentence in the Methodology section's privacy
+paragraph (`PRIVACY_ANALYTICS_SENTENCE(_EN)` in `baseTokens()`) — the page can never claim less or
+more tracking than the build actually ships.
 
 ## Scope & non-goals
 
@@ -157,9 +163,12 @@ other historical series, no accounts, no comments, no runtime backend.
 
 ## License
 
-MIT, see [LICENSE](LICENSE). Data sourced from Kementerian Keuangan (Kemenkeu), Bank Indonesia,
-and BPS — see the site's Methodology section for exact source links, and `data/debt.json` /
-`data/external-debt.json` for the `source_url` behind every figure.
+Code: MIT, see [LICENSE](LICENSE). Data: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/),
+see [data/LICENSE](data/LICENSE) — covers `data/debt.json`, `data/external-debt.json`, and the
+generated `public/state.json` / `public/external-debt.json`. Underlying figures are sourced from
+Kementerian Keuangan (Kemenkeu), Bank Indonesia, and BPS — see the site's Methodology section for
+exact source links, and `data/debt.json` / `data/external-debt.json` for the `source_url` behind
+every figure.
 
 ## Contact
 

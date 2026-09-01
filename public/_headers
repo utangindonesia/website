@@ -1,8 +1,11 @@
-/style.a5138312cc.css
+/style.6c162bbea5.css
   Cache-Control: public, max-age=31536000, immutable
 /app.14a59b52cc.js
   Cache-Control: public, max-age=31536000, immutable
 /counter.23833d4172.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
 /state.json

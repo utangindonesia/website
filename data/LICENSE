@@ -1,0 +1,12 @@
+The compiled data series in this directory (debt.json, external-debt.json) and the
+generated files built from them (public/state.json, public/external-debt.json) are
+licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0):
+https://creativecommons.org/licenses/by/4.0/
+
+Attribution: "utangindonesia.org" with a link to the site.
+
+The underlying figures are reproduced from official publications of Kementerian
+Keuangan (Kemenkeu), Bank Indonesia and Badan Pusat Statistik (BPS); each entry carries
+the source_url it was taken from. Cite those sources for the figures themselves.
+
+Source code is separately licensed under the MIT License (see ../LICENSE).

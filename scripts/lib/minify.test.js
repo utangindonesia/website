@@ -49,6 +49,23 @@ test('minifyCss preserves selector-combinator spaces', () => {
   assert.equal(minifyCss('.a > .b + .c ~ .d { color: red; }'), '.a > .b + .c ~ .d{color:red}');
 });
 
+test('minifyCss keeps an @font-face url() and unicode-range list intact and brace-balanced', () => {
+  const css = `
+    @font-face {
+      font-family: 'IBM Plex Sans';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url(/fonts/IBMPlexSans-Regular.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+FEFF, U+FFFD;
+    }
+  `;
+  const minified = minifyCss(css);
+  assert.match(minified, /url\(\/fonts\/IBMPlexSans-Regular\.woff2\)/);
+  assert.match(minified, /unicode-range:U\+0000-00FF,U\+0131,U\+0152-0153,U\+2000-206F,U\+FEFF,U\+FFFD/);
+  assert.equal(braceCount(minified), braceCount(css));
+});
+
 // --- minifyJs: comment stripping ----------------------------------------
 
 test('minifyJs strips line comments', () => {

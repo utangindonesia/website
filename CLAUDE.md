@@ -35,7 +35,14 @@ and the `scripts/**` build logic itself (including `scripts/lib/external-debt.js
 `docs/plans/2026-08-external-debt-history.md` for the full design/data rationale). `public/` also
 holds a handful of hand-maintained static images — `favicon.svg`, `favicon-16.png`, `favicon-32.png`,
 `apple-touch-icon.png`, `og-image.png` — deliberately **not** content-hashed, since they change
-essentially never and `og-image.png` is referenced by absolute URL for external scrapers.
+essentially never and `og-image.png` is referenced by absolute URL for external scrapers. The same
+goes for `public/fonts/*.woff2` and `public/fonts/OFL.txt` (self-hosted IBM Plex, sourced from
+Google Fonts' own latin-subset files so glyphs/hinting match, replaced by renaming rather than by
+a hash) — if a file there needs replacing, rename it. Never reintroduce a Google Fonts `<link>` in
+any template; the site's privacy posture depends on making zero third-party requests. The
+`PRIVACY_ANALYTICS_SENTENCE` / `PRIVACY_ANALYTICS_SENTENCE_EN` tokens in `baseTokens()` must stay
+guarded by `CF_BEACON_TOKEN` exactly like `CF_ANALYTICS_SNIPPET` — the privacy paragraph can never
+claim less or more tracking than the build actually ships.
 
 **Caching**: `public/_headers` is generated (Cloudflare Pages reads it natively) — the three hashed
 assets get a year-long `immutable` Cache-Control, since a hashed URL provably can't change content
