@@ -61,6 +61,10 @@ updated Bank Indonesia SULNI/SEKI or BPS figure):
 
 That's the entire update — no other files should need to change for a routine quarterly refresh.
 
+An agent-executable version of this procedure — with the source URLs, cross-check rules, and a PR
+template — lives in `docs/plans/recurring-quarterly-data-update.md`; run it each cycle with
+`/execute-plan docs/plans/recurring-quarterly-data-update.md` (it opens a PR, never pushes to `main`).
+
 ### Precision
 
 Indonesia's debt (~Rp 8.6 quadrillion) is close to `Number.MAX_SAFE_INTEGER` (2^53 − 1 ≈
