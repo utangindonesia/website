@@ -61,9 +61,10 @@ updated Bank Indonesia SULNI/SEKI or BPS figure):
 
 That's the entire update — no other files should need to change for a routine quarterly refresh.
 
-An agent-executable version of this procedure — with the source URLs, cross-check rules, and a PR
-template — lives in `docs/plans/recurring-quarterly-data-update.md`; run it each cycle with
-`/execute-plan docs/plans/recurring-quarterly-data-update.md` (it opens a PR, never pushes to `main`).
+For an agent-executed refresh, use `/quarterly-data-update`; `/update-central-debt` and
+`/update-external-debt` cover single-source updates. These repository skills follow
+`docs/plans/recurring-quarterly-data-update.md`, including its source URLs, cross-check rules, and PR
+template (they open a PR, never push to `main`).
 
 ### Precision
 
