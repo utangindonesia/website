@@ -13,16 +13,19 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="utangindonesia.org">
 <meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="id_ID">
 <meta property="og:title" content="{{TITLE}}">
 <meta property="og:description" content="{{META_DESCRIPTION}}">
 <meta property="og:url" content="{{OG_URL}}">
 <meta property="og:image" content="{{OG_IMAGE_URL}}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{OG_IMAGE_ALT}}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{TITLE}}">
 <meta name="twitter:description" content="{{META_DESCRIPTION}}">
 <meta name="twitter:image" content="{{OG_IMAGE_URL}}">
+<meta name="twitter:image:alt" content="{{OG_IMAGE_ALT}}">
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="alternate icon" type="image/png" sizes="32x32" href="/favicon-32.png">
@@ -35,27 +38,31 @@
 <body>
 <div class="wrap">
 
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
   <header class="site-header">
     <a href="#hero" class="wordmark"><span class="w-accent">utang</span>indonesia<span class="w-dim">.org</span></a>
-    <nav class="site-nav">
+    <nav class="site-nav" aria-label="Main navigation">
       <a href="#methodology">Methodology</a>
       <a href="#sources">Sources</a>
-      <a href="/">ID</a>
+      <a href="/" hreflang="id" lang="id">Indonesia</a>
     </nav>
   </header>
 
-  <section id="hero" class="hero">
-    <div class="eyebrow">Central Government Debt, Republic of Indonesia</div>
-    <h1 class="counter" style="margin:0;">
+  <main id="main-content">
+  <section id="hero" class="hero" aria-labelledby="hero-title">
+    <h1 class="eyebrow" id="hero-title">Central Government Debt, Republic of Indonesia</h1>
+    <div class="counter">
       <span class="counter-rp">Rp</span>
       <span class="counter-number" id="counter-number">{{COUNTER_GROUPS_HTML}}</span>
-    </h1>
+    </div>
     <div class="official-line">Last official figure: {{OFFICIAL_FIGURE_TEXT}} ({{OFFICIAL_DATE_HUMAN}}, Ministry of Finance)</div>
 
     <div class="interest-ticker">
       <span class="interest-label">Debt interest</span>
       <span class="interest-value" id="interest-value">Rp {{INTEREST_VALUE}}</span>
       <span class="interest-unit">/sec</span>
+      <button type="button" class="btn btn--secondary ticker-toggle" id="ticker-toggle" data-pause-label="Pause" data-resume-label="Resume" hidden>Pause</button>
     </div>
 
     <div id="stale-badge" class="stale-badge" data-official-date="{{OFFICIAL_DATE_ISO}}"{{STALE_HIDDEN_ATTR}}>
@@ -66,38 +73,40 @@
 
     <div class="copy-row">
       <span class="copy-row-label">Share</span>
-      <button type="button" class="btn btn--primary js-copy-link" data-share-text="{{SHARE_TEXT}}" data-share-url="{{SHARE_URL}}" data-copied-label="Copied ✓">Copy link</button>
+      <button type="button" class="btn btn--primary js-copy-link" data-share-text="{{SHARE_TEXT}}" data-share-url="{{SHARE_URL}}" data-copied-label="Copied ✓" data-copied-status="Link copied" data-shared-label="Shared ✓" data-shared-status="Link shared" data-error-status="Link not copied">Copy link</button>
       <a href="#share" class="copy-row-link">Share on social media →</a>
     </div>
+
+    <p class="visually-hidden" role="status" id="copy-status"></p>
 
     <noscript>
       <div class="nojs-note">JavaScript disabled — the figure is held at the last official release, with no per-second estimate.</div>
     </noscript>
   </section>
 
-  <section class="section">
+  <section class="section" aria-labelledby="section-debt-title">
     <div class="section-header">
-      <h2>Debt</h2>
+      <h2 id="section-debt-title">Debt</h2>
       <span class="section-count">6 indicators</span>
     </div>
     <div class="card-grid">
 
       <div class="card">
-        <div class="card-label">Debt per resident</div>
+        <h3 class="card-label">Debt per resident</h3>
         <div class="card-value">{{CARD_PER_PENDUDUK_VALUE}}</div>
         <div class="card-note">{{CARD_PER_PENDUDUK_NOTE_EN}}</div>
         <a href="{{CARD_PER_PENDUDUK_SOURCE}}" class="card-source">Source →</a>
       </div>
 
       <div class="card">
-        <div class="card-label">Debt per worker</div>
+        <h3 class="card-label">Debt per worker</h3>
         <div class="card-value">{{CARD_PER_PEKERJA_VALUE}}</div>
         <div class="card-note">{{CARD_PER_PEKERJA_NOTE_EN}}</div>
         <a href="{{CARD_PER_PEKERJA_SOURCE}}" class="card-source">Source →</a>
       </div>
 
       <div class="card">
-        <div class="card-label">Debt composition</div>
+        <h3 class="card-label">Debt composition</h3>
         <div class="card-value">{{CARD_KOMPOSISI_VALUE_EN}}</div>
         <div class="bar-block">
           <div class="bar-track"><span class="bar-fill" style="width: {{SBN_PCT}}%;"></span></div>
@@ -108,7 +117,7 @@
       </div>
 
       <div class="card">
-        <div class="card-label">Interest paid, year to date</div>
+        <h3 class="card-label">Interest paid, year to date</h3>
         <div class="card-value">{{CARD_BUNGA_VALUE}}</div>
         <div class="bar-block">
           <div class="bar-track"><span class="bar-fill" style="width: {{BUNGA_PCT}}%;"></span></div>
@@ -119,7 +128,7 @@
       </div>
 
       <div class="card">
-        <div class="card-label">Budget deficit, year to date</div>
+        <h3 class="card-label">Budget deficit, year to date</h3>
         <div class="card-value">{{CARD_DEFISIT_VALUE}}</div>
         <div class="bar-block">
           <div class="bar-track"><span class="bar-fill" style="width: {{DEFISIT_PDB_PCT}}%;"></span></div>
@@ -130,7 +139,7 @@
       </div>
 
       <div class="card">
-        <div class="card-label">Average debt tenor</div>
+        <h3 class="card-label">Average debt tenor</h3>
         <div class="card-value">{{CARD_TENOR_VALUE_EN}}</div>
         <div class="card-note">{{CARD_TENOR_NOTE_EN}}</div>
         <a href="{{CARD_TENOR_SOURCE}}" class="card-source">Source →</a>
@@ -139,15 +148,15 @@
     </div>
   </section>
 
-  <section class="section section--context">
+  <section class="section section--context" aria-labelledby="section-context-title">
     <div class="section-header">
-      <h2>Context</h2>
+      <h2 id="section-context-title">Context</h2>
       <span class="section-count">3 indicators</span>
     </div>
     <div class="card-grid">
 
       <div class="card">
-        <div class="card-label">Debt-to-GDP ratio</div>
+        <h3 class="card-label">Debt-to-GDP ratio</h3>
         <div class="card-value">{{CARD_PDB_VALUE}}</div>
         <div class="bar-rows">
 {{PDB_BAR_ROWS}}
@@ -157,14 +166,14 @@
       </div>
 
       <div class="card">
-        <div class="card-label">Government external debt</div>
+        <h3 class="card-label">Government external debt</h3>
         <div class="card-value">{{CARD_ULN_VALUE}}</div>
         <div class="card-note">{{CARD_ULN_NOTE_EN}}</div>
         <a href="{{CARD_ULN_SOURCE}}" class="card-source">Source →</a>
       </div>
 
       <div class="card">
-        <div class="card-label">Foreign exchange reserves</div>
+        <h3 class="card-label">Foreign exchange reserves</h3>
         <div class="card-value">{{CARD_CADEV_VALUE}}</div>
         <div class="card-note">{{CARD_CADEV_NOTE_EN}}</div>
         <a href="{{CARD_CADEV_SOURCE}}" class="card-source">Source →</a>
@@ -173,15 +182,15 @@
     </div>
   </section>
 
-  <section class="section section--uln">
+  <section class="section section--uln" aria-labelledby="section-external-title">
     <div class="section-header">
-      <h2>External debt</h2>
+      <h2 id="section-external-title">External debt</h2>
       <span class="section-count">{{ULN_SECTION_COUNT}}</span>
     </div>
     <div class="card-grid">
 
       <div class="card">
-        <div class="card-label">Government external debt position, quarterly</div>
+        <h3 class="card-label">Government external debt position, quarterly</h3>
         <div class="card-value-row">
           <span class="card-value">{{ULN_LATEST_VALUE}}</span>
           <span class="card-date">{{ULN_LATEST_DATE_HUMAN}}</span>
@@ -210,6 +219,11 @@
             <span class="delta-value">{{ULN_5Y_VALUE_EN}} <span class="delta-pct">({{ULN_5Y_PCT_EN}})</span></span>
           </div>
         </div>
+        <p class="visually-hidden" id="uln-chart-description">Line chart of government and total national external debt. {{ULN_TABLE_SUMMARY}}</p>
+        <details class="chart-table-details">
+          <summary>{{ULN_TABLE_TOGGLE_LABEL}}</summary>
+          {{ULN_CHART_TABLE}}
+        </details>
         <div class="card-note">Includes SBN held by non-residents · {{ULN_EDITION}}</div>
         <a href="{{ULN_SOURCE_URL}}" class="card-source">Source →</a>
       </div>
@@ -217,23 +231,23 @@
     </div>
   </section>
 
-  <section id="share" class="share-section">
-    <h2>Share</h2>
+  <section id="share" class="share-section" aria-labelledby="share-title">
+    <h2 id="share-title">Share</h2>
     <div class="share-chips">
-      <a href="{{SHARE_WA}}" target="_blank" rel="noopener" class="chip">WhatsApp</a>
-      <a href="{{SHARE_X}}" target="_blank" rel="noopener" class="chip">X</a>
-      <a href="{{SHARE_FB}}" target="_blank" rel="noopener" class="chip">Facebook</a>
-      <a href="{{SHARE_TG}}" target="_blank" rel="noopener" class="chip">Telegram</a>
-      <a href="{{SHARE_THREADS}}" target="_blank" rel="noopener" class="chip">Threads</a>
-      <a href="{{SHARE_LINE}}" target="_blank" rel="noopener" class="chip">LINE</a>
-      <button type="button" class="btn btn--primary js-copy-link" data-share-text="{{SHARE_TEXT}}" data-share-url="{{SHARE_URL}}" data-copied-label="Copied ✓">Copy link</button>
+      <a href="{{SHARE_WA}}" target="_blank" rel="noopener" class="chip">WhatsApp<span class="visually-hidden"> (opens in new tab)</span></a>
+      <a href="{{SHARE_X}}" target="_blank" rel="noopener" class="chip">X<span class="visually-hidden"> (opens in new tab)</span></a>
+      <a href="{{SHARE_FB}}" target="_blank" rel="noopener" class="chip">Facebook<span class="visually-hidden"> (opens in new tab)</span></a>
+      <a href="{{SHARE_TG}}" target="_blank" rel="noopener" class="chip">Telegram<span class="visually-hidden"> (opens in new tab)</span></a>
+      <a href="{{SHARE_THREADS}}" target="_blank" rel="noopener" class="chip">Threads<span class="visually-hidden"> (opens in new tab)</span></a>
+      <a href="{{SHARE_LINE}}" target="_blank" rel="noopener" class="chip">LINE<span class="visually-hidden"> (opens in new tab)</span></a>
+      <button type="button" class="btn btn--primary js-copy-link" data-share-text="{{SHARE_TEXT}}" data-share-url="{{SHARE_URL}}" data-copied-label="Copied ✓" data-copied-status="Link copied" data-shared-label="Shared ✓" data-shared-status="Link shared" data-error-status="Link not copied">Copy link</button>
     </div>
     <span class="share-caption">The link shares the official figure, not the per-second estimate.</span>
   </section>
 
-  <section id="methodology" class="methodology">
+  <section id="methodology" class="methodology" aria-labelledby="methodology-title">
     <div class="prose">
-      <h2>Methodology</h2>
+      <h2 id="methodology-title">Methodology</h2>
       <p>The large number on this page is not a real-time measurement. Since October 2025, Indonesia's central government debt position is officially reported by the Ministry of Finance every quarter, typically five to seven weeks after quarter-end. What we do is simple: take the latest official release, then add to it linearly using this year's debt growth rate.</p>
       <p>That rate is the difference between the last two quarterly debt positions, divided by the number of seconds between them. For the interest ticker, we use this year's budgeted debt-interest ceiling divided by the number of seconds in a year. Both are averages, not a daily cash flow: government securities are issued in biweekly auctions, and coupon payments fall on specific dates.</p>
       <p>Because of that, the number ticking on your screen is an estimate. The small line under the counter — the last official position and its date — is always the more reliable figure. Every time a new release is published, the counter resets to that official number, so the estimate never drifts more than one reporting cycle.</p>
@@ -246,19 +260,19 @@
     <div id="sources" class="faq-list">
       <div class="faq-cell"><div class="faq-label">Frequently asked</div></div>
       <div class="faq-cell">
-        <div class="faq-question">Is this an official figure?</div>
+        <h3 class="faq-question">Is this an official figure?</h3>
         <div class="faq-answer">No. This site is not affiliated with the government. The official figure is the one printed in the small line under the counter, sourced from the Ministry of Finance.</div>
       </div>
       <div class="faq-cell">
-        <div class="faq-question">Why does it differ from the figure in the news?</div>
+        <h3 class="faq-question">Why does it differ from the figure in the news?</h3>
         <div class="faq-answer">News reports typically cite the end-of-quarter position, while this counter adds an estimate on top of that date. Differences also arise when another source includes state-owned enterprise debt.</div>
       </div>
       <div class="faq-cell">
-        <div class="faq-question">How often is the data updated?</div>
+        <h3 class="faq-question">How often is the data updated?</h3>
         <div class="faq-answer">Every quarter, following DJPPR's debt position release. If a release is late, a small badge appears near the counter noting the age of the data.</div>
       </div>
       <div class="faq-cell">
-        <div class="faq-question">Can this figure be used for reporting?</div>
+        <h3 class="faq-question">Can this figure be used for reporting?</h3>
         <div class="faq-answer">Yes, if you cite the official position and its date, not the per-second estimate. The raw data file is available in the repository.</div>
       </div>
       <div class="faq-cell">
@@ -273,12 +287,13 @@
       </div>
     </div>
   </section>
+  </main>
 
   <footer class="site-footer">
     <div class="footer-disclaimer">Not affiliated with the Government of the Republic of Indonesia</div>
     <div class="footer-links">
       <a href="{{GITHUB_REPO_URL}}">GitHub</a>
-      <a href="/">Versi Indonesia</a>
+      <a href="/" hreflang="id" lang="id">Versi Indonesia</a>
     </div>
   </footer>
 

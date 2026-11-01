@@ -4,8 +4,10 @@ const counterEl = document.getElementById('counter-number');
 const interestEl = document.getElementById('interest-value');
 const staleBadgeEl = document.getElementById('stale-badge');
 const staleTextEl = document.getElementById('stale-text');
+const tickerToggle = document.getElementById('ticker-toggle');
+const copyStatusEl = document.getElementById('copy-status');
 
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 function renderCounter(value) {
   const groups = formatRupiahGroups(value);
@@ -39,20 +41,38 @@ function setupShareButtons() {
   const shareUrl = buttons[0].dataset.shareUrl;
   const originalLabels = buttons.map((btn) => btn.textContent);
   let copiedTimer;
+  let statusTimer;
+
+  // role="status" region: counters must never live here, only one-shot
+  // copy/share outcomes. Cleared first so an identical message re-announces.
+  function announce(message) {
+    if (!copyStatusEl) return;
+    copyStatusEl.textContent = '';
+    clearTimeout(statusTimer);
+    statusTimer = setTimeout(() => { copyStatusEl.textContent = message; }, 30);
+  }
 
   async function copyLink() {
+    // Record which path was used before awaiting it: when the native share
+    // sheet resolves, the feedback must say "Shared", not "Copied".
+    const viaShare = Boolean(navigator.share);
     try {
-      if (navigator.share) {
+      if (viaShare) {
         await navigator.share({ text: shareText, url: shareUrl });
       } else {
         await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
       }
-    } catch {
-      // Cancelled share or clipboard failure: no error UI, per design spec.
+    } catch (error) {
+      // A cancelled share sheet is not a failure — stay silent. Genuine
+      // clipboard/share errors announce through the polite status region.
+      if (error && error.name === 'AbortError') return;
+      announce(buttons[0].dataset.errorStatus);
       return;
     }
-    // Both the hero and "Bagikan" buttons share the copied state.
-    buttons.forEach((btn) => { btn.textContent = btn.dataset.copiedLabel; });
+    announce(viaShare ? buttons[0].dataset.sharedStatus : buttons[0].dataset.copiedStatus);
+    // Both the hero and share-section buttons swap to the same success label.
+    const successKey = viaShare ? 'sharedLabel' : 'copiedLabel';
+    buttons.forEach((btn) => { btn.textContent = btn.dataset[successKey]; });
     clearTimeout(copiedTimer);
     copiedTimer = setTimeout(() => {
       buttons.forEach((btn, i) => { btn.textContent = originalLabels[i]; });
@@ -71,6 +91,7 @@ async function main() {
   } catch {
     // Fetch failed: leave the server-rendered static figure in place —
     // it already shows the correct last-official value (see build-state.js).
+    // The pause/resume toggle stays hidden, so the no-JS look is preserved.
     return;
   }
 
@@ -89,13 +110,61 @@ async function main() {
     // seconds/year), not an accumulating total — see templates' "/detik"
     // unit. A small cosmetic jitter keeps it visually "live" without
     // implying it grows over time; reduced-motion users get the bare rate.
-    const jitter = reducedMotion ? 0 : Math.floor(Math.random() * 40) - 20;
+    const jitter = reducedMotionQuery.matches ? 0 : Math.floor(Math.random() * 40) - 20;
     interestEl.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(Math.round(interestRatePerSec) + jitter)}`;
   }
 
-  tick();
-  const intervalMs = reducedMotion ? 1000 : 100;
-  setInterval(tick, intervalMs);
+  // One timer drives both visual tickers; the hourly staleness check below
+  // is a separate interval, so pausing never stops the stale badge.
+  let tickTimer = null;
+
+  function startTicker() {
+    if (tickTimer !== null) return;
+    tickTimer = setInterval(tick, reducedMotionQuery.matches ? 1000 : 100);
+  }
+
+  function stopTicker() {
+    if (tickTimer === null) return;
+    clearInterval(tickTimer);
+    tickTimer = null;
+  }
+
+  // Action button whose name swaps between Pause and Resume — deliberately
+  // not aria-pressed, per the design's accessibility review.
+  function setToggleLabel(paused) {
+    tickerToggle.textContent = paused ? tickerToggle.dataset.resumeLabel : tickerToggle.dataset.pauseLabel;
+  }
+
+  if (reducedMotionQuery.matches) {
+    // Start paused on the server-rendered official figures: ticking now
+    // would replace them with estimates before the user asks for any.
+    setToggleLabel(true);
+  } else {
+    tick();
+    setToggleLabel(false);
+    startTicker();
+  }
+  tickerToggle.hidden = false;
+
+  tickerToggle.addEventListener('click', () => {
+    if (tickTimer === null) {
+      tick(); // render immediately before restarting, so resume feels instant
+      setToggleLabel(false);
+      startTicker();
+    } else {
+      stopTicker();
+      setToggleLabel(true);
+    }
+  });
+
+  // If the user switches to reduced motion while the page is open, pause —
+  // and never auto-resume when the preference flips back.
+  reducedMotionQuery.addEventListener('change', (event) => {
+    if (event.matches) {
+      stopTicker();
+      setToggleLabel(true);
+    }
+  });
 
   // Re-check staleness roughly once an hour — cheap and keeps a long-open
   // tab honest without a full state.json re-fetch.

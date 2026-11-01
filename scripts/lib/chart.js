@@ -60,9 +60,11 @@ function usdLabel(valueMillion, lang) {
  * @param {'wide'|'narrow'} opts.variant
  * @param {'id'|'en'} opts.lang
  * @param {string} opts.ariaLabel already-localized, already-parameterized
+ * @param {string} [opts.ariaDescribedBy] optional id of a textual alternative
+ *   element (escaped); emitted as aria-describedby only when supplied
  * @returns {string} SVG markup
  */
-export function renderLineChart({ series, keys, variant, lang, ariaLabel }) {
+export function renderLineChart({ series, keys, variant, lang, ariaLabel, ariaDescribedBy }) {
   const layout = LAYOUT[variant];
   const n = series.length;
   const dataMaxBn = Math.max(...keys.map((k) => Math.max(...series.map((p) => p[k.field])))) / 1000;
@@ -158,5 +160,33 @@ export function renderLineChart({ series, keys, variant, lang, ariaLabel }) {
     return `<circle cx="${cx}" cy="${cy}" r="2.5" fill="currentColor" class="${k.className}"/><text x="${round1(cx - 8)}" y="${round1(cy - 8)}" font-size="11" text-anchor="end" fill="currentColor" class="${k.labelClassName}">${label}</text>`;
   });
 
-  return `<svg viewBox="${layout.viewBox}" width="100%" height="auto" role="img" aria-label="${escapeXml(ariaLabel)}" style="display:block;overflow:visible" class="chart-svg"><g fill="none">${gridLines.join('')}</g><g class="chart-axis-y" text-anchor="end" font-size="11">${yLabels.join('')}</g><g class="chart-axis-x" text-anchor="middle" font-size="11">${xLabels.join('')}</g>${lines.join('')}${lastMarkers.join('')}</svg>`;
+  const describedBy = ariaDescribedBy ? ` aria-describedby="${escapeXml(ariaDescribedBy)}"` : '';
+  return `<svg viewBox="${layout.viewBox}" width="100%" height="auto" role="img" aria-label="${escapeXml(ariaLabel)}"${describedBy} style="display:block;overflow:visible" class="chart-svg"><g fill="none">${gridLines.join('')}</g><g class="chart-axis-y" text-anchor="end" font-size="11">${yLabels.join('')}</g><g class="chart-axis-x" text-anchor="middle" font-size="11">${xLabels.join('')}</g>${lines.join('')}${lastMarkers.join('')}</svg>`;
+}
+
+/**
+ * Accessible tabular alternative to renderLineChart: one row per data point,
+ * every historical value the SVG only shows for the last point. Rendered once
+ * (inside the template's <details>) even though wide/narrow are two SVGs.
+ * @param {object} opts
+ * @param {{date:string,[field:string]:number}[]} opts.series sorted ascending by date, USD millions
+ * @param {{field:string,label:string}[]} opts.keys column defs, in display order
+ * @param {'id'|'en'} opts.lang
+ * @param {string} opts.caption already-localized table caption
+ * @param {{date:string,unit:string}} opts.labels localized date-column header and value unit
+ * @returns {string} HTML <table> markup
+ */
+export function renderChartTable({ series, keys, lang, caption, labels }) {
+  const head = [`<th scope="col">${escapeXml(labels.date)}</th>`]
+    .concat(keys.map((k) => `<th scope="col">${escapeXml(k.label)} (${escapeXml(labels.unit)})</th>`))
+    .join('');
+  const body = series
+    .map((p) => {
+      const cells = [`<th scope="row">${escapeXml(humanDate(p.date, lang))}</th>`]
+        .concat(keys.map((k) => `<td>${escapeXml(usdLabel(p[k.field], lang))}</td>`))
+        .join('');
+      return `<tr>${cells}</tr>`;
+    })
+    .join('');
+  return `<table class="chart-table"><caption>${escapeXml(caption)}</caption><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
 }

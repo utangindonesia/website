@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { renderLineChart, niceAxisMax } from './chart.js';
+import { renderLineChart, renderChartTable, niceAxisMax } from './chart.js';
+import { humanDate } from './format.js';
 
 const KEYS = [
   { field: 'government', className: 'chart-line--government', labelClassName: 'chart-label--government', label: 'Pemerintah', strokeWidth: 2 },
@@ -141,4 +142,74 @@ test('aria-label and title text are XML-escaped', () => {
     ariaLabel: 'A & B <test>',
   });
   assert.ok(svg.includes('aria-label="A &amp; B &lt;test&gt;"'));
+});
+
+test('aria-describedby is emitted on the svg only when supplied and is XML-escaped', () => {
+  const series = synthSeries(2);
+  const withRef = renderLineChart({ series, keys: KEYS, variant: 'wide', lang: 'id', ariaLabel: 'test', ariaDescribedBy: 'uln-chart-description' });
+  assert.ok(withRef.includes('role="img" aria-label="test" aria-describedby="uln-chart-description"'));
+  const escaped = renderLineChart({ series, keys: KEYS, variant: 'narrow', lang: 'id', ariaLabel: 'test', ariaDescribedBy: 'a&b"c' });
+  assert.ok(escaped.includes('aria-describedby="a&amp;b&quot;c"'), escaped);
+  const without = renderLineChart({ series, keys: KEYS, variant: 'wide', lang: 'id', ariaLabel: 'test' });
+  assert.ok(!without.includes('aria-describedby'), without);
+});
+
+const TABLE_LABELS = {
+  id: { date: 'Tanggal', unit: 'USD miliar' },
+  en: { date: 'Date', unit: 'USD billion' },
+};
+
+function tableKeys(lang) {
+  return [
+    { field: 'government', label: lang === 'en' ? 'Government' : 'Pemerintah' },
+    { field: 'total', label: lang === 'en' ? 'National total' : 'Total nasional' },
+  ];
+}
+
+test('chart table renders exactly one table with one row per data point, each date exactly once', () => {
+  const series = synthSeries(12);
+  const html = renderChartTable({ series, keys: tableKeys('id'), lang: 'id', caption: 'Uji tabel', labels: TABLE_LABELS.id });
+  assert.equal((html.match(/<table class="chart-table">/g) || []).length, 1);
+  const rows = html.match(/<tr><th scope="row">/g) || [];
+  assert.equal(rows.length, series.length);
+  for (const p of series) {
+    const occurrences = html.split(`>${humanDate(p.date, 'id')}<`).length - 1;
+    assert.equal(occurrences, 1, `date ${p.date} appears ${occurrences} times`);
+  }
+});
+
+test('chart table values are localized and formatted like the SVG labels', () => {
+  const series = [{ date: '2026-06-30', government: 205432, total: 500000 }];
+  const idHtml = renderChartTable({ series, keys: tableKeys('id'), lang: 'id', caption: 'c', labels: TABLE_LABELS.id });
+  const enHtml = renderChartTable({ series, keys: tableKeys('en'), lang: 'en', caption: 'c', labels: TABLE_LABELS.en });
+  assert.ok(idHtml.includes('USD 205,4 mi'), idHtml);
+  assert.ok(idHtml.includes('USD 500,0 mi'), idHtml);
+  assert.ok(enHtml.includes('USD 205.4 bn'), enHtml);
+  assert.ok(enHtml.includes('USD 500.0 bn'), enHtml);
+});
+
+test('chart table header cells are scoped and carry the localized unit', () => {
+  const series = synthSeries(2);
+  const html = renderChartTable({ series, keys: tableKeys('en'), lang: 'en', caption: 'c', labels: TABLE_LABELS.en });
+  assert.equal((html.match(/<th scope="col">/g) || []).length, 3);
+  assert.ok(html.includes('<th scope="col">Government (USD billion)</th>'));
+  assert.ok(html.includes('<th scope="col">National total (USD billion)</th>'));
+  assert.ok(html.includes('<th scope="col">Date</th>'));
+  assert.ok(html.includes('<caption>c</caption>'));
+});
+
+test('chart table escapes caption, headers, and values', () => {
+  const series = [{ date: '2026-06-30', government: 205432, total: 500000 }];
+  const html = renderChartTable({
+    series,
+    keys: [{ field: 'government', label: 'A & <B>' }],
+    lang: 'en',
+    caption: 'R&D <spending> & more',
+    labels: { date: 'D&te', unit: 'USD bn' },
+  });
+  assert.ok(!html.includes('R&D <spending>'), html);
+  assert.ok(html.includes('R&amp;D &lt;spending&gt; &amp; more'));
+  assert.ok(html.includes('A &amp; &lt;B&gt;'));
+  assert.ok(html.includes('D&amp;te'));
+  assert.ok(!/<(?!table|caption|thead|tbody|tr|th|td|\/)/.test(html.replace(/<\/?(table|caption|thead|tbody|tr|th|td)[^>]*>/g, '')));
 });

@@ -3,7 +3,9 @@ const counterEl = document.getElementById('counter-number');
 const interestEl = document.getElementById('interest-value');
 const staleBadgeEl = document.getElementById('stale-badge');
 const staleTextEl = document.getElementById('stale-text');
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const tickerToggle = document.getElementById('ticker-toggle');
+const copyStatusEl = document.getElementById('copy-status');
+const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 function renderCounter(value) {
 const groups = formatRupiahGroups(value);
 const spans = counterEl.children;
@@ -31,17 +33,29 @@ const shareText = buttons[0].dataset.shareText;
 const shareUrl = buttons[0].dataset.shareUrl;
 const originalLabels = buttons.map((btn) => btn.textContent);
 let copiedTimer;
+let statusTimer;
+function announce(message) {
+if (!copyStatusEl) return;
+copyStatusEl.textContent = '';
+clearTimeout(statusTimer);
+statusTimer = setTimeout(() => { copyStatusEl.textContent = message; }, 30);
+}
 async function copyLink() {
+const viaShare = Boolean(navigator.share);
 try {
-if (navigator.share) {
+if (viaShare) {
 await navigator.share({ text: shareText, url: shareUrl });
 } else {
         await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
 }
-} catch {
+} catch (error) {
+if (error && error.name === 'AbortError') return;
+announce(buttons[0].dataset.errorStatus);
 return;
 }
-buttons.forEach((btn) => { btn.textContent = btn.dataset.copiedLabel; });
+announce(viaShare ? buttons[0].dataset.sharedStatus : buttons[0].dataset.copiedStatus);
+const successKey = viaShare ? 'sharedLabel' : 'copiedLabel';
+buttons.forEach((btn) => { btn.textContent = btn.dataset[successKey]; });
 clearTimeout(copiedTimer);
 copiedTimer = setTimeout(() => {
 buttons.forEach((btn, i) => { btn.textContent = originalLabels[i]; });
@@ -66,12 +80,46 @@ updateStaleBadge(state.official_date);
 function tick() {
 const now = Date.now();
 renderCounter(projectDebt(baseline, baselineTs, ratePerSec, now));
-const jitter = reducedMotion ? 0 : Math.floor(Math.random() * 40) - 20;
+const jitter = reducedMotionQuery.matches ? 0 : Math.floor(Math.random() * 40) - 20;
     interestEl.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(Math.round(interestRatePerSec) + jitter)}`;
 }
+let tickTimer = null;
+function startTicker() {
+if (tickTimer !== null) return;
+tickTimer = setInterval(tick, reducedMotionQuery.matches ? 1000 : 100);
+}
+function stopTicker() {
+if (tickTimer === null) return;
+clearInterval(tickTimer);
+tickTimer = null;
+}
+function setToggleLabel(paused) {
+tickerToggle.textContent = paused ? tickerToggle.dataset.resumeLabel : tickerToggle.dataset.pauseLabel;
+}
+if (reducedMotionQuery.matches) {
+setToggleLabel(true);
+} else {
 tick();
-const intervalMs = reducedMotion ? 1000 : 100;
-setInterval(tick, intervalMs);
+setToggleLabel(false);
+startTicker();
+}
+tickerToggle.hidden = false;
+tickerToggle.addEventListener('click', () => {
+if (tickTimer === null) {
+tick();
+setToggleLabel(false);
+startTicker();
+} else {
+stopTicker();
+setToggleLabel(true);
+}
+});
+reducedMotionQuery.addEventListener('change', (event) => {
+if (event.matches) {
+stopTicker();
+setToggleLabel(true);
+}
+});
 setInterval(() => updateStaleBadge(state.official_date), 60 * 60 * 1000);
 }
 setupShareButtons();

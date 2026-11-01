@@ -19,7 +19,7 @@ import {
 } from './lib/debt-math.js';
 import { fmtId, fmtId1dp, fmt1dp, groupsToHtml, formatTriliunIdr, formatUsdBillions, humanDate } from './lib/format.js';
 import { validateExternalSeries, latestPoint, changes } from './lib/external-debt.js';
-import { renderLineChart } from './lib/chart.js';
+import { renderLineChart, renderChartTable } from './lib/chart.js';
 import { buildAssets } from './build-assets.js';
 import { SITE_ORIGIN, GITHUB_REPO_URL, CF_BEACON_TOKEN } from './site-config.js';
 
@@ -117,7 +117,21 @@ function ulnAriaLabel(lang) {
 }
 
 function ulnChartSvg(variant, lang) {
-  return renderLineChart({ series: ulnSeries, keys: ulnChartKeys(lang), variant, lang, ariaLabel: ulnAriaLabel(lang) });
+  return renderLineChart({ series: ulnSeries, keys: ulnChartKeys(lang), variant, lang, ariaLabel: ulnAriaLabel(lang), ariaDescribedBy: 'uln-chart-description' });
+}
+
+function ulnChartTable(lang) {
+  return renderChartTable({
+    series: ulnSeries,
+    keys: ulnChartKeys(lang),
+    lang,
+    caption: lang === 'en'
+      ? `Government and total national external debt by quarter, ${ulnSeries[0].date.slice(0, 4)}–${ulnLatest.date.slice(0, 4)}`
+      : `Utang luar negeri pemerintah dan total nasional per triwulan, ${ulnSeries[0].date.slice(0, 4)}–${ulnLatest.date.slice(0, 4)}`,
+    labels: lang === 'en'
+      ? { date: 'Date', unit: 'USD billion' }
+      : { date: 'Tanggal', unit: 'USD miliar' },
+  });
 }
 
 // --- public/state.json -----------------------------------------------------
@@ -182,8 +196,13 @@ function renderPdbRowsEn() {
     .join('\n');
 }
 
-function jsonLd(lang) {
+function jsonLd(lang, title, metaDescription) {
   const isId = lang === 'id';
+  const pageUrl = isId ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}/en/`;
+  const websiteId = `${SITE_ORIGIN}/#website`;
+  const webPageId = `${pageUrl}#webpage`;
+  const debtDatasetId = `${SITE_ORIGIN}/#dataset-central-government-debt`;
+  const externalDatasetId = `${SITE_ORIGIN}/#dataset-external-debt`;
   const faqs = isId
     ? [
         ['Apakah angka ini resmi?', 'Tidak. Situs ini tidak berafiliasi dengan pemerintah. Angka resminya adalah yang tertulis di baris kecil di bawah penghitung, bersumber dari Kemenkeu.'],
@@ -200,7 +219,25 @@ function jsonLd(lang) {
 
   const graph = [
     {
+      '@type': 'WebSite',
+      '@id': websiteId,
+      name: 'utangindonesia.org',
+      url: `${SITE_ORIGIN}/`,
+      inLanguage: ['id', 'en'],
+    },
+    {
+      '@type': 'WebPage',
+      '@id': webPageId,
+      url: pageUrl,
+      name: title,
+      description: metaDescription,
+      inLanguage: lang,
+      isPartOf: { '@id': websiteId },
+      about: [{ '@id': debtDatasetId }, { '@id': externalDatasetId }],
+    },
+    {
       '@type': 'Dataset',
+      '@id': debtDatasetId,
       name: isId ? 'Utang Pemerintah Pusat Republik Indonesia' : 'Central Government Debt, Republic of Indonesia',
       description: isId
         ? 'Posisi utang pemerintah pusat Indonesia, diperbarui setiap triwulan dari rilis resmi Kementerian Keuangan.'
@@ -217,6 +254,7 @@ function jsonLd(lang) {
     },
     {
       '@type': 'Dataset',
+      '@id': externalDatasetId,
       name: isId ? 'Utang Luar Negeri Indonesia' : 'Indonesia External Debt',
       description: isId
         ? 'Posisi utang luar negeri Indonesia menurut kelompok peminjam (pemerintah, bank sentral, swasta), triwulanan, dari Bank Indonesia (SULNI). Utang pemerintah termasuk SBN yang dipegang nonresiden.'
@@ -274,7 +312,10 @@ function baseTokens(lang) {
     URL_EN: `${SITE_ORIGIN}/en/`,
     OG_URL: canonical,
     OG_IMAGE_URL: `${SITE_ORIGIN}/og-image.png`,
-    JSONLD: jsonLd(lang),
+    OG_IMAGE_ALT: isId
+      ? 'Pratinjau penghitung utang pemerintah pusat Indonesia dalam rupiah'
+      : 'Preview of the live Indonesian central government debt counter in rupiah',
+    JSONLD: jsonLd(lang, title, metaDescription),
 
     COUNTER_GROUPS_HTML: groupsToHtml(baseline),
     OFFICIAL_FIGURE_TEXT: officialFigureText,
@@ -356,6 +397,11 @@ function baseTokens(lang) {
     ULN_STALE_BADGE: ulnStaleBadge(lang),
     ULN_CHART_SVG_WIDE: ulnChartSvg('wide', lang),
     ULN_CHART_SVG_NARROW: ulnChartSvg('narrow', lang),
+    ULN_CHART_TABLE: ulnChartTable(lang),
+    ULN_TABLE_TOGGLE_LABEL: isId ? 'Lihat data triwulanan lengkap (tabel)' : 'Show full quarterly data (table)',
+    ULN_TABLE_SUMMARY: isId
+      ? 'Seluruh nilai triwulanan tersedia dalam tabel di bawah grafik.'
+      : 'All quarterly values are available in the table below the chart.',
 
     ULN_QOQ_VALUE: signedUsdMi(ulnChanges.qoq, 'id'),
     ULN_QOQ_VALUE_EN: signedUsdMi(ulnChanges.qoq, 'en'),
